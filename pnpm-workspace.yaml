@@ -1,0 +1,14 @@
+packages:
+  - "packages/*"
+
+catalog:
+  '@vitest/coverage-v8': &vitest ^3.1.1
+  vitest: *vitest
+
+catalogs:
+  xsai:
+    '@xsai/stream-text': &xsai ^0.2.0
+    '@xsai/shared-chat': *xsai
+    '@xsai/tool': *xsai
+  valibot:
+    valibot: &valibot ^1.0.0

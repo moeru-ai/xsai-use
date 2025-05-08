@@ -1,0 +1,44 @@
+{
+  "name": "@xsai-use/shared",
+  "type": "module",
+  "version": "0.1.0",
+  "description": "UI staff for xsai-use.",
+  "author": "exoticknight",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/moeru-ai/xsai-use.git",
+    "directory": "packages/shared"
+  },
+  "bugs": "https://github.com/moeru-ai/xsai-use/issues",
+  "keywords": [
+    "xsai",
+    "openai",
+    "ai",
+    "ui"
+  ],
+  "sideEffects": false,
+  "exports": "./src/index.ts",
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "exports": {
+      ".": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "./package.json": "./package.json"
+    },
+    "main": "./dist/index.js",
+    "types": "./dist/index.d.ts"
+  },
+  "scripts": {
+    "build": "pkgroll"
+  },
+  "dependencies": {
+    "@xsai/shared-chat": "catalog:xsai",
+    "@xsai/stream-text": "catalog:xsai"
+  },
+  "devDependencies": {}
+}

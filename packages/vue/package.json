@@ -1,0 +1,10 @@
+{
+  "name": "xsai-vue",
+  "version": "0.0.1",
+  "private": true,
+  "dependencies": {
+    "vue": "^3.0.0",
+    "@xsai/shared-chat": "catalog:xsai",
+    "@xsai/stream-text": "catalog:xsai"
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "name": "xsai-use",
+  "version": "1.0.0",
+  "private": true,
+  "packageManager": "pnpm@10.0.0",
+  "repository": "github:moeru-ai/xsai-use",
+  "author": "exoticknight",
+  "license": "Apache-2.0",
+  "description": "when UI libs meet xsai",
+  "workspaces": [
+    "packages/shared",
+    "packages/react",
+    "packages/vue",
+    "packages/svelte"
+  ],
+  "scripts": {
+    "build": "pnpm -r build",
+    "lint": "eslint --cache .",
+    "test": "pnpm -r --workspace-concurrency=1 test"
+  },
+  "devDependencies": {
+    "eslint": "^9.26.0",
+    "pkgroll": "^2.12.2",
+    "vitest": "catalog:"
+  }
+}

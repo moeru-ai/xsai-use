@@ -1,0 +1,20 @@
+version: "0.2"
+ignorePaths: []
+dictionaryDefinitions: []
+dictionaries: []
+words:
+  - contentlayer
+  - eslintcache
+  - Moeru
+  - moeru-ai
+  - nemo
+  - njsproj
+  - ntvs
+  - pkgroll
+  - sonarjs
+  - valibot
+  - vercel
+  - vitest
+  - xsai
+ignoreWords: []
+import: []
