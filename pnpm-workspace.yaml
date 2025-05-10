@@ -7,7 +7,7 @@ catalog:
 
 catalogs:
   xsai:
-    '@xsai/stream-text': &xsai ^0.2.0
+    '@xsai/stream-text': &xsai ^0.2.1
     '@xsai/shared-chat': *xsai
     '@xsai/tool': *xsai
   valibot:

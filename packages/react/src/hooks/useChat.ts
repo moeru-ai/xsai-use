@@ -2,8 +2,7 @@ import type { UIMessage } from '@xsai-use/shared'
 import type { Message } from '@xsai/shared-chat'
 import type { StreamTextOptions } from '@xsai/stream-text'
 
-import { accumulateDataChunk, dateNumberIDGenerate, extractUIMessageParts } from '@xsai-use/shared'
-import { streamText } from '@xsai/stream-text'
+import { dateNumberIDGenerate, extractUIMessageParts, useApi } from '@xsai-use/shared'
 import { useCallback, useMemo, useRef, useState } from 'react'
 
 import { useStableValue } from './utils/use-stable-state'
@@ -20,9 +19,9 @@ declare global {
  */
 export type InputMessage = Omit<Message, 'id' | 'role'>
 
-export type UseChatOptions = Omit<StreamTextOptions, 'messages' | 'onChunk' | 'onFinish'> & {
+export type UseChatOptions = Omit<StreamTextOptions, 'onChunk' | 'onFinish'> & {
   id?: string
-  idGenerator?: () => string
+  generateID?: () => string
   initialMessages?: Message[]
   onFinish?: (message: Message) => Promise<void> | void
   preventDefault?: boolean
@@ -35,7 +34,7 @@ const DEFAULT_ID_GENERATOR = () => dateNumberIDGenerate().toString()
 export function useChat(options: UseChatOptions) {
   const {
     id,
-    idGenerator = DEFAULT_ID_GENERATOR,
+    generateID = DEFAULT_ID_GENERATOR,
     initialMessages = [],
     onError,
     onFinish,
@@ -43,13 +42,13 @@ export function useChat(options: UseChatOptions) {
     ...streamTextOptions
   } = options
 
-  const [chatID] = useState(id ?? idGenerator())
+  const [chatID] = useState(id ?? generateID())
 
   const stableInitialMessages = useStableValue(initialMessages ?? [])
   const initialUIMessages = useMemo(() => stableInitialMessages.map((m) => {
     return {
       ...m,
-      id: idGenerator(),
+      id: generateID(),
       parts: extractUIMessageParts(m),
     }
   }), [stableInitialMessages])
@@ -79,7 +78,7 @@ export function useChat(options: UseChatOptions) {
 
       const userMessage = {
         ...message,
-        id: idGenerator(),
+        id: generateID(),
         role: 'user',
       } as UIMessage
       userMessage.parts = extractUIMessageParts(userMessage)
@@ -92,36 +91,32 @@ export function useChat(options: UseChatOptions) {
       try {
         abortControllerRef.current = new AbortController()
 
-        const { dataChunkStream } = await streamText({
-          ...streamTextOptions as StreamTextOptions,
+        await useApi({
+          ...streamTextOptions,
           messages: [...UIMessages, userMessage],
-          onDataChunk: (chunk) => {
-            if (!lastUIMessage.current) {
-              lastUIMessage.current = {
-                id: idGenerator(),
-                parts: [],
-                role: 'assistant',
-              }
-            }
-            accumulateDataChunk(lastUIMessage.current, chunk)
-
-            const lastMessage = lastUIMessage.current
-            // maybe we should throttle this
-            setUIMessages(messages => [
-              ...messages.at(-1)?.role === 'assistant' ? messages.slice(0, messages.length - 1) : messages,
-              lastMessage,
-            ])
-          },
           onFinish: () => {
             setStatus('idle')
-            // eslint-disable-next-line ts/no-floating-promises
             onFinish?.(UIMessages[UIMessages.length - 1])
             lastUIMessage.current = null
           },
           signal: abortControllerRef.current.signal,
-        })
+        }, {
+          generateID,
+          updatingMessage: {
+            id: generateID(),
+            parts: [],
+            role: 'assistant',
+          },
+          onUpdate: (message) => {
+            const clonedMessage = structuredClone(message)
 
-        await dataChunkStream.pipeTo(new WritableStream({ write() { } }))
+            // maybe we should throttle this
+            setUIMessages(messages => [
+              ...messages.at(-1)?.role === 'assistant' ? messages.slice(0, messages.length - 1) : messages,
+              clonedMessage,
+            ])
+          },
+        })
       }
       catch (error) {
         setStatus('error')

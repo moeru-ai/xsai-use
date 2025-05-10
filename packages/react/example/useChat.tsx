@@ -579,7 +579,7 @@ export function ChatComponent() {
         content: 'you are a helpful assistant.',
       },
     ],
-    baseURL: 'http://localhost:43210/v1/',
+    baseURL: 'http://localhost:11434/v1/',
     model: 'mistral-nemo-instruct-2407',
     maxSteps: 3,
     toolChoice: 'auto',
