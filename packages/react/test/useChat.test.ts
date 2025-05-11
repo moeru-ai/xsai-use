@@ -1,4 +1,4 @@
-import { renderHook } from '@testing-library/react-hooks'
+import { renderHook } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
 
 import { useChat } from '../src'
@@ -6,7 +6,7 @@ import { useChat } from '../src'
 describe('useChat', () => {
   it('initializes with default value', () => {
     const { result } = renderHook(() => useChat({
-      baseURL: 'http://localhost:43210/v1/',
+      baseURL: 'http://localhost:11434/v1/',
       id: 'simple-chat',
       initialMessages: [
         {
