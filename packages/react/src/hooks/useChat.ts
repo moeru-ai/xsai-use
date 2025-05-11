@@ -5,7 +5,7 @@ import { dateNumberIDGenerate, extractUIMessageParts, useApi } from '@xsai-use/s
 
 import { useCallback, useMemo, useRef, useState } from 'react'
 
-import { useStableValue } from './utils/use-stable-state'
+import { useStableValue } from './utils/use-stable-value'
 
 declare global {
   interface ReadableStream<R = any> {
