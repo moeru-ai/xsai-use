@@ -6,5 +6,5 @@ import Chat from './useChat'
 ReactDOM.createRoot(document.getElementById('app')!).render(
   <React.StrictMode>
     <Chat />
-  </React.StrictMode>
+  </React.StrictMode>,
 )

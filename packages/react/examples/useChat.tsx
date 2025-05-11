@@ -1,9 +1,9 @@
-import { useEffect, useRef, useState } from 'react'
+import type { UIMessageToolCallPart } from '@xsai-use/shared'
 import { tool } from '@xsai/tool'
-import { description, object, pipe, string } from 'valibot'
+import { useEffect, useRef, useState } from 'react'
 
+import { description, object, pipe, string } from 'valibot'
 import { useChat } from '../src'
-import { UIMessageToolCallPart } from '@xsai-use/shared'
 
 // Inline styles for the component
 const styles = {
@@ -280,14 +280,14 @@ const styles = {
     backgroundRepeat: 'no-repeat',
     backgroundPosition: '0 0',
     animation: 'shimmer 2s infinite linear',
-  }
+  },
 }
 
-type ToolMap = {
+interface ToolMap {
   [key: string]: Awaited<ReturnType<typeof tool>>
 }
 
-const UIMessageTextPart = ({ text }: { text: string }) => {
+function UIMessageTextPart({ text }: { text: string }) {
   return (
     <div>
       {text}
@@ -295,9 +295,9 @@ const UIMessageTextPart = ({ text }: { text: string }) => {
   )
 }
 
-const ShimmerPlaceholder = () => {
+function ShimmerPlaceholder() {
   useEffect(() => {
-    const styleElement = document.createElement('style');
+    const styleElement = document.createElement('style')
     styleElement.textContent = `
       @keyframes shimmer {
         0% {
@@ -307,30 +307,30 @@ const ShimmerPlaceholder = () => {
           background-position: 468px 0;
         }
       }
-    `;
-    document.head.appendChild(styleElement);
+    `
+    document.head.appendChild(styleElement)
 
     return () => {
-      document.head.removeChild(styleElement);
-    };
-  }, []);
+      document.head.removeChild(styleElement)
+    }
+  }, [])
 
   return (
     <div style={styles.shimmerContainer}>
-      <div style={{...styles.shimmerLine, ...styles.shimmerLineShort}}></div>
-      <div style={{...styles.shimmerLine, ...styles.shimmerLineMedium}}></div>
-      <div style={{...styles.shimmerLine, ...styles.shimmerLineLong}}></div>
+      <div style={{ ...styles.shimmerLine, ...styles.shimmerLineShort }}></div>
+      <div style={{ ...styles.shimmerLine, ...styles.shimmerLineMedium }}></div>
+      <div style={{ ...styles.shimmerLine, ...styles.shimmerLineLong }}></div>
     </div>
-  );
-};
+  )
+}
 
-const UIMessageToolPart = ({part}:{ part: UIMessageToolCallPart}) => {
-  const [showResult, setShowResult] = useState(false);
-  const hasResult = part.status === 'complete' || part.status === 'error';
-  const isLoading = part.status === 'loading' || part.status === 'partial';
+function UIMessageToolPart({ part }: { part: UIMessageToolCallPart }) {
+  const [showResult, setShowResult] = useState(false)
+  const hasResult = part.status === 'complete' || part.status === 'error'
+  const isLoading = part.status === 'loading' || part.status === 'partial'
 
   useEffect(() => {
-    const styleElement = document.createElement('style');
+    const styleElement = document.createElement('style')
     styleElement.textContent = `
       @keyframes shimmer {
         0% {
@@ -340,17 +340,17 @@ const UIMessageToolPart = ({part}:{ part: UIMessageToolCallPart}) => {
           background-position: 468px 0;
         }
       }
-    `;
+    `
 
     if (!document.head.querySelector('style[data-shimmer="true"]')) {
-      styleElement.setAttribute('data-shimmer', 'true');
-      document.head.appendChild(styleElement);
+      styleElement.setAttribute('data-shimmer', 'true')
+      document.head.appendChild(styleElement)
     }
 
     return () => {
       // Don't remove, as other components may be using it
-    };
-  }, []);
+    }
+  }, [])
 
   const renderToolResult = () => {
     if (part.status === 'error' && part.error) {
@@ -358,11 +358,11 @@ const UIMessageToolPart = ({part}:{ part: UIMessageToolCallPart}) => {
         <pre style={styles.toolResultCode}>
           {String(part.error)}
         </pre>
-      );
+      )
     }
 
     if (part.status === 'complete' && part.result) {
-      const result = part.result;
+      const result = part.result
       if (typeof result === 'string') {
         return (
           <pre style={styles.toolResultCode}>
@@ -401,11 +401,11 @@ const UIMessageToolPart = ({part}:{ part: UIMessageToolCallPart}) => {
       }
 
       // Handle primitive results
-      return <div>{String(part.result)}</div>;
+      return <div>{String(part.result)}</div>
     }
 
-    return null;
-  };
+    return null
+  }
 
   return (
     <div style={styles.toolPart}>
@@ -413,10 +413,10 @@ const UIMessageToolPart = ({part}:{ part: UIMessageToolCallPart}) => {
         style={{
           ...styles.toolContainer,
           ...((!hasResult && !isLoading || !showResult) && styles.toolContainerClosed),
-          ...(isLoading && styles.toolHeaderShimmer)
+          ...(isLoading && styles.toolHeaderShimmer),
         }}
         onClick={() => (hasResult || isLoading) && setShowResult(!showResult)}
-        title={(hasResult || isLoading) ? "Click to toggle result" : undefined}
+        title={(hasResult || isLoading) ? 'Click to toggle result' : undefined}
       >
         <div style={styles.toolHeaderLeft}>
           <span style={styles.toolIcon}>🔧</span>
@@ -440,8 +440,9 @@ const UIMessageToolPart = ({part}:{ part: UIMessageToolCallPart}) => {
       {hasResult && showResult && (
         <div style={{
           ...styles.toolResultContainer,
-          ...(part.status === 'error' ? { borderColor: '#dc3545', backgroundColor: '#fff8f8' } : {})
-        }}>
+          ...(part.status === 'error' ? { borderColor: '#dc3545', backgroundColor: '#fff8f8' } : {}),
+        }}
+        >
           {renderToolResult()}
         </div>
       )}
@@ -450,13 +451,13 @@ const UIMessageToolPart = ({part}:{ part: UIMessageToolCallPart}) => {
 }
 
 // Extracted ChatMessage component
-const ChatMessage = ({
+function ChatMessage({
   message,
-  isError = false
+  isError = false,
 }: {
-  message: ReturnType<typeof useChat>['messages'][number],
+  message: ReturnType<typeof useChat>['messages'][number]
   isError?: boolean
-}) => {
+}) {
   return (
     <div
       style={{
@@ -487,35 +488,35 @@ const ChatMessage = ({
 
 // Simple Chat Component implementation
 export function ChatComponent() {
-  const inputRef = useRef<HTMLInputElement>(null);
-  const [isLoadingTools, setIsLoadingTools] = useState(true);
-  const [loadedTools, setLoadedTools] = useState<ToolMap>({});
+  const inputRef = useRef<HTMLInputElement>(null)
+  const [isLoadingTools, setIsLoadingTools] = useState(true)
+  const [loadedTools, setLoadedTools] = useState<ToolMap>({})
 
   // Add keyframe animation for spinner
   useEffect(() => {
-    const styleElement = document.createElement('style');
+    const styleElement = document.createElement('style')
     styleElement.textContent = `
       @keyframes spin {
         to { transform: rotate(360deg); }
       }
-    `;
-    document.head.appendChild(styleElement);
+    `
+    document.head.appendChild(styleElement)
 
     return () => {
-      document.head.removeChild(styleElement);
-    };
-  }, []);
+      document.head.removeChild(styleElement)
+    }
+  }, [])
 
   // Load tools on component mount
   useEffect(() => {
     const loadTools = async () => {
-      setIsLoadingTools(true);
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      setIsLoadingTools(true)
+      await new Promise(resolve => setTimeout(resolve, 1000))
       try {
         const weatherTool = await tool({
           description: 'Get the weather in a location',
           execute: async ({ location }) => {
-            await new Promise(resolve => setTimeout(resolve, 2000));
+            await new Promise(resolve => setTimeout(resolve, 2000))
             if (Math.random() > 0.5) {
               throw new Error('Weather API error')
             }
@@ -531,7 +532,7 @@ export function ChatComponent() {
               description('The location to get the weather for'),
             ),
           }),
-        });
+        })
 
         const calculatorTool = await tool({
           description: 'Calculate mathematical expression',
@@ -545,21 +546,23 @@ export function ChatComponent() {
               description('The mathematical expression to calculate'),
             ),
           }),
-        });
+        })
 
         setLoadedTools({
           weather: weatherTool,
-          calculator: calculatorTool
-        });
-      } catch (err) {
-        console.error('Error loading tools:', err);
-      } finally {
-        setIsLoadingTools(false);
+          calculator: calculatorTool,
+        })
       }
-    };
+      catch (err) {
+        console.error('Error loading tools:', err)
+      }
+      finally {
+        setIsLoadingTools(false)
+      }
+    }
 
-    loadTools();
-  }, []);
+    loadTools()
+  }, [])
 
   const {
     handleSubmit,
@@ -589,19 +592,20 @@ export function ChatComponent() {
   // Handle send button click based on status
   const handleSendButtonClick = (e: React.MouseEvent) => {
     if (status === 'loading') {
-      e.preventDefault();
-      stop();
-    } else {
+      e.preventDefault()
+      stop()
+    }
+    else {
       // Let the form submission handle this case
     }
-  };
+  }
 
   // Focus input when status changes to idle
   useEffect(() => {
     if (status === 'idle' && inputRef.current) {
-      inputRef.current.focus();
+      inputRef.current.focus()
     }
-  }, [status]);
+  }, [status])
 
   return (
     <div style={styles.container}>
@@ -610,31 +614,35 @@ export function ChatComponent() {
       </div>
 
       <div style={styles.toolsSection}>
-        {isLoadingTools ? (
-          <div style={styles.toolLoading}>
-            Loading tools...
-          </div>
-        ) : (
-          <div style={styles.toolsContainer}>
-            <span>Available tools:</span>
-            {Object.keys(loadedTools).map(toolName => (
-              <div key={toolName} style={styles.toolBadge}>
-                <span style={styles.toolIcon}>🔧</span>
-                <span style={styles.toolName}>{toolName}</span>
+        {isLoadingTools
+          ? (
+              <div style={styles.toolLoading}>
+                Loading tools...
               </div>
-            ))}
-          </div>
-        )}
+            )
+          : (
+              <div style={styles.toolsContainer}>
+                <span>Available tools:</span>
+                {Object.keys(loadedTools).map(toolName => (
+                  <div key={toolName} style={styles.toolBadge}>
+                    <span style={styles.toolIcon}>🔧</span>
+                    <span style={styles.toolName}>{toolName}</span>
+                  </div>
+                ))}
+              </div>
+            )}
       </div>
 
       <div style={styles.messagesContainer}>
-        {messages.map(message => message ? (
-          <ChatMessage
-            key={message.id}
-            message={message}
-            isError={status === 'error'}
-          />
-        ): 'null')}
+        {messages.map(message => message
+          ? (
+              <ChatMessage
+                key={message.id}
+                message={message}
+                isError={status === 'error'}
+              />
+            )
+          : 'null')}
       </div>
 
       <form data-test-id="form" onSubmit={handleSubmit} style={styles.inputContainer}>
@@ -652,22 +660,24 @@ export function ChatComponent() {
           onClick={handleSendButtonClick}
           style={{
             ...styles.sendButton,
-            ...(status === 'loading' ? styles.sendButtonLoading : {})
+            ...(status === 'loading' ? styles.sendButtonLoading : {}),
           }}
           type={status === 'loading' ? 'button' : 'submit'}
         >
-          {status === 'loading' ? (
-            <>
-              <div style={styles.loadingSpinner}></div>
-              Cancel
-            </>
-          ) : 'Send'}
+          {status === 'loading'
+            ? (
+                <>
+                  <div style={styles.loadingSpinner}></div>
+                  Cancel
+                </>
+              )
+            : 'Send'}
         </button>
         <button
           data-test-id="reset"
           onClick={(e) => {
-            e.preventDefault();
-            reset();
+            e.preventDefault()
+            reset()
           }}
           style={styles.resetButton}
           type="button"

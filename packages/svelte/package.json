@@ -3,8 +3,8 @@
   "version": "0.0.1",
   "private": true,
   "dependencies": {
-    "svelte": "^5.0.0",
     "@xsai/shared-chat": "catalog:xsai",
-    "@xsai/stream-text": "catalog:xsai"
+    "@xsai/stream-text": "catalog:xsai",
+    "svelte": "^5.0.0"
   }
 }

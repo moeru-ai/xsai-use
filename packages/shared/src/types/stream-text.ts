@@ -1,4 +1,4 @@
-import type { Usage, FinishReason, ToolCall, ToolMessagePart } from '@xsai/shared-chat'
+import type { FinishReason, ToolCall, ToolMessagePart, Usage } from '@xsai/shared-chat'
 
 export type StreamTextDataChunk =
   | { error: unknown, type: 'error' }

@@ -1,8 +1,8 @@
 import type { UIMessage } from '@xsai-use/shared'
 import type { Message } from '@xsai/shared-chat'
 import type { StreamTextOptions } from '@xsai/stream-text'
-
 import { dateNumberIDGenerate, extractUIMessageParts, useApi } from '@xsai-use/shared'
+
 import { useCallback, useMemo, useRef, useState } from 'react'
 
 import { useStableValue } from './utils/use-stable-state'

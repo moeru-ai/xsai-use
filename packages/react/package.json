@@ -2,16 +2,24 @@
   "name": "xsai-react",
   "version": "0.0.1",
   "private": true,
-  "dependencies": {
-    "@xsai-use/shared": "workspace:",
-    "@xsai/shared-chat": "catalog:xsai",
-    "@xsai/stream-text": "catalog:xsai"
-  },
   "sideEffects": false,
   "exports": "./src/index.ts",
   "files": [
     "dist"
   ],
+  "scripts": {
+    "build": "pkgroll",
+    "preview": "vite",
+    "test": "vitest run"
+  },
+  "peerDependencies": {
+    "react": "^19.0.0"
+  },
+  "dependencies": {
+    "@xsai-use/shared": "workspace:",
+    "@xsai/shared-chat": "catalog:xsai",
+    "@xsai/stream-text": "catalog:xsai"
+  },
   "publishConfig": {
     "exports": {
       ".": {
@@ -22,14 +30,6 @@
     },
     "main": "./dist/index.js",
     "types": "./dist/index.d.ts"
-  },
-  "scripts": {
-    "build": "pkgroll",
-    "preview": "vite",
-    "test": "vitest run"
-  },
-  "peerDependencies": {
-    "react": "^19.0.0"
   },
   "devDependencies": {
     "@testing-library/react": "^16.3.0",

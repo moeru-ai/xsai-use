@@ -1,22 +1,15 @@
 {
+  "extends": "../eslint-config/tsconfig.lib.json",
   "compilerOptions": {
-    "composite": true,
-    "target": "ESNext",
-    "jsx": "react-jsx",
-    "lib": ["ESNext", "DOM"],
-    "useDefineForClassFields": true,
-    "module": "ESNext",
-    "moduleResolution": "bundler",
-    "resolveJsonModule": true,
-    "allowImportingTsExtensions": true,
-    "strict": true,
-    "noFallthroughCasesInSwitch": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "noEmit": true,
-    "allowSyntheticDefaultImports": true,
-    "isolatedModules": true,
-    "skipLibCheck": true
+    "jsx": "react-jsx"
   },
-  "include": ["src", "test", "example"]
+  "include": [
+    "src",
+    "test",
+    "examples"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist"
+  ]
 }

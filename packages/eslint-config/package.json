@@ -1,6 +1,7 @@
 {
-  "name": "@xsai-use/shared",
+  "name": "@xsai-use/eslint-config",
   "type": "module",
+  "private": true,
   "version": "0.1.0",
   "description": "UI staff for xsai-use.",
   "author": "exoticknight",
@@ -37,8 +38,6 @@
     "build": "pkgroll"
   },
   "dependencies": {
-    "@xsai/shared-chat": "catalog:xsai",
-    "@xsai/stream-text": "catalog:xsai"
-  },
-  "devDependencies": {}
+    "@antfu/eslint-config": "^4.13.0"
+  }
 }

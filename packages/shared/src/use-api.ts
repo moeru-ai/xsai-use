@@ -1,21 +1,19 @@
-import { streamText, type StreamTextOptions } from '@xsai/stream-text'
-import { UIMessage, UIMessageToolCallPart } from './types'
+import type { StreamTextOptions } from '@xsai/stream-text'
+import type { UIMessage, UIMessageToolCallPart } from './types'
 import { dateNumberIDGenerate } from '@xsai-use/shared'
+import { streamText } from '@xsai/stream-text'
 
 const DEFAULT_ID_GENERATOR = () => dateNumberIDGenerate().toString()
 
-export const useApi = async (
-  streamTextOptions: Omit<StreamTextOptions, 'onEvent'>,
-  {
-    onUpdate,
-    updatingMessage,
-    generateID = DEFAULT_ID_GENERATOR,
-  }: {
-    onUpdate: (message: UIMessage) => void
-    updatingMessage?: UIMessage
-    generateID?: () => string
-  },
-) => {
+export async function useApi(streamTextOptions: Omit<StreamTextOptions, 'onEvent'>, {
+  onUpdate,
+  updatingMessage,
+  generateID = DEFAULT_ID_GENERATOR,
+}: {
+  onUpdate: (message: UIMessage) => void
+  updatingMessage?: UIMessage
+  generateID?: () => string
+}) {
   const message = updatingMessage ?? {
     id: generateID(),
     parts: [],
@@ -94,7 +92,7 @@ export const useApi = async (
       }
 
       onUpdate(message)
-    }
+    },
   })
 
   await chunkStream.pipeTo(new WritableStream({ write() { } }))

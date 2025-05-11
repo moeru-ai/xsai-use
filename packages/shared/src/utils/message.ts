@@ -2,7 +2,7 @@ import type { Message } from '@xsai/shared-chat'
 
 import type { UIMessagePart } from '../types'
 
-export const extractUIMessageParts = (message: Message): UIMessagePart[] => {
+export function extractUIMessageParts(message: Message): UIMessagePart[] {
   if (message.content === undefined) {
     return []
   }
