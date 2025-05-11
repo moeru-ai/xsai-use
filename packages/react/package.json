@@ -1,7 +1,9 @@
 {
-  "name": "xsai-react",
+  "name": "@xsai-use/react",
   "version": "0.0.1",
-  "private": true,
+  "description": "when UI libs meet xsai",
+  "author": "exoticknight",
+  "license": "MIT",
   "sideEffects": false,
   "exports": "./src/index.ts",
   "files": [

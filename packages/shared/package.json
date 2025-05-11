@@ -2,9 +2,9 @@
   "name": "@xsai-use/shared",
   "type": "module",
   "version": "0.1.0",
-  "description": "UI staff for xsai-use.",
+  "description": "when UI libs meet xsai",
   "author": "exoticknight",
-  "license": "Apache-2.0",
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/moeru-ai/xsai-use.git",

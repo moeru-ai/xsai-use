@@ -1,7 +1,10 @@
 {
-  "name": "xsai-svelte",
-  "version": "0.0.1",
-  "private": true,
+  "name": "@xsai-use/svelte",
+  "type": "module",
+  "version": "0.1.0",
+  "description": "when UI libs meet xsai",
+  "author": "exoticknight",
+  "license": "MIT",
   "dependencies": {
     "@xsai/shared-chat": "catalog:xsai",
     "@xsai/stream-text": "catalog:xsai",
