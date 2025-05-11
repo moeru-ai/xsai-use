@@ -395,6 +395,8 @@ function UIMessageToolPart({ part }: { part: UIMessageToolCallPart }) {
                   </audio>
                 )
               }
+
+              return null
             })}
           </div>
         )
@@ -412,6 +414,7 @@ function UIMessageToolPart({ part }: { part: UIMessageToolCallPart }) {
       <div
         style={{
           ...styles.toolContainer,
+          // eslint-disable-next-line style/no-mixed-operators
           ...((!hasResult && !isLoading || !showResult) && styles.toolContainerClosed),
           ...(isLoading && styles.toolHeaderShimmer),
         }}
@@ -454,9 +457,11 @@ function UIMessageToolPart({ part }: { part: UIMessageToolCallPart }) {
 function ChatMessage({
   message,
   isError = false,
+  error,
 }: {
   message: ReturnType<typeof useChat>['messages'][number]
   isError?: boolean
+  error?: Error | null
 }) {
   return (
     <div
@@ -479,7 +484,7 @@ function ChatMessage({
       })}
       {isError && (
         <div style={styles.errorMessage}>
-          x
+          {error?.message}
         </div>
       )}
     </div>
@@ -537,6 +542,7 @@ export function ChatComponent() {
         const calculatorTool = await tool({
           description: 'Calculate mathematical expression',
           execute: ({ expression }) => ({
+            // eslint-disable-next-line no-eval
             result: eval(expression),
           }),
           name: 'calculator',
@@ -634,12 +640,13 @@ export function ChatComponent() {
       </div>
 
       <div style={styles.messagesContainer}>
-        {messages.map(message => message
+        {messages.map((message, idx) => message
           ? (
               <ChatMessage
                 key={message.id}
                 message={message}
-                isError={status === 'error'}
+                isError={idx === messages.length - 1 && status === 'error'}
+                error={idx === messages.length - 1 ? error : null}
               />
             )
           : 'null')}
