@@ -1,6 +1,4 @@
-import type { UIMessage } from '@xsai-use/shared'
-import type { Message } from '@xsai/shared-chat'
-import type { StreamTextOptions } from '@xsai/stream-text'
+import type { InputMessage, UIMessage, UseChatOptions, UseChatStatus } from '@xsai-use/shared'
 import { dateNumberIDGenerate, extractUIMessageParts, useApi } from '@xsai-use/shared'
 
 import { useCallback, useMemo, useRef, useState } from 'react'
@@ -14,29 +12,15 @@ declare global {
   }
 }
 
-/**
- * you can either use { content: string } or { parts: [{ text:'', type:'text' }] }
- */
-export type InputMessage = Omit<Message, 'id' | 'role'>
-
-export type UseChatOptions = Omit<StreamTextOptions, 'onChunk' | 'onFinish'> & {
-  id?: string
-  generateID?: () => string
-  initialMessages?: Message[]
-  onFinish?: (message: Message) => Promise<void> | void
-  preventDefault?: boolean
-}
-
-export type UseChatStatus = 'error' | 'idle' | 'loading'
-
 const DEFAULT_ID_GENERATOR = () => dateNumberIDGenerate().toString()
+
+export type { UseChatOptions, UseChatStatus }
 
 export function useChat(options: UseChatOptions) {
   const {
     id,
     generateID = DEFAULT_ID_GENERATOR,
     initialMessages = [],
-    onError,
     onFinish,
     preventDefault = false,
     ...streamTextOptions
@@ -96,6 +80,7 @@ export function useChat(options: UseChatOptions) {
           messages: [...UIMessages, userMessage],
           onFinish: () => {
             setStatus('idle')
+            // eslint-disable-next-line ts/no-floating-promises
             onFinish?.(UIMessages[UIMessages.length - 1])
             lastUIMessage.current = null
           },
@@ -130,7 +115,6 @@ export function useChat(options: UseChatOptions) {
       chatID,
       initialMessages,
       onFinish,
-      onError,
       // state
       UIMessages,
       status,

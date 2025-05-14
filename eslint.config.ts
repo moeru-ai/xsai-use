@@ -1,3 +1,5 @@
-import { config } from './packages/eslint-config/src'
+import antfu from '@antfu/eslint-config'
 
-export default config()
+export default antfu({
+  typescript: { tsconfigPath: './tsconfig.json' },
+})

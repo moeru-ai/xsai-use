@@ -2,5 +2,5 @@
   "extends": [
     "./packages/eslint-config/tsconfig.node.json"
   ],
-  "include": ["**/*.config.ts", "**/scripts/*.ts"]
+  "include": ["**/*.config.ts", "**/*.config.js", "**/scripts/*.ts", "**/scripts/*.js"]
 }

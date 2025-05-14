@@ -1,0 +1,11 @@
+{
+  "extends": "../eslint-config/tsconfig.lib.json",
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.svelte.ts",
+    "src/**/*.svelte",
+    "examples/**/*.ts",
+    "examples/**/*.svelte.ts",
+    "examples/**/*.svelte"
+  ]
+}

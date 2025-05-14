@@ -5,8 +5,8 @@
     "source.fixAll.eslint": "explicit",
     "source.organizeImports": "never"
   },
-  "eslint.runtime": "node",
   "eslint.validate": [
+    "svelte",
     "javascript",
     "javascriptreact",
     "typescript",
@@ -20,5 +20,8 @@
     "yaml",
     "toml",
     "xml"
-  ]
+  ],
+  "[svelte]": {
+    "editor.defaultFormatter": "svelte.svelte-vscode"
+  }
 }
