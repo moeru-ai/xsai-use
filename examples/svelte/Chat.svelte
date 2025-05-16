@@ -1,7 +1,20 @@
-<script>
-  import { Chat } from '../src'
+<script lang='ts'>
+  import { Chat } from '@xsai-use/svelte'
 
-  const chat = new Chat()
+  const chat = new Chat({
+    id: 'simple-chat',
+    preventDefault: true,
+    initialMessages: [
+      {
+        role: 'system',
+        content: 'you are a helpful assistant.',
+      },
+    ],
+    baseURL: 'http://localhost:11434/v1/',
+    model: 'mistral-nemo-instruct-2407',
+    maxSteps: 3,
+    toolChoice: 'auto',
+  })
 </script>
 
 <main>

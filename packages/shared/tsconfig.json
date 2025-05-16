@@ -1,6 +1,0 @@
-{
-  "extends": "../eslint-config/tsconfig.lib.json",
-  "include": [
-    "src",
-  ]
-}

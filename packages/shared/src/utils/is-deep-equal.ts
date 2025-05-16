@@ -8,7 +8,6 @@
  * @param {any} obj2 - The second object to compare.
  * @returns {boolean} - Returns true if the two objects are deeply equal, false otherwise.
  */
-// eslint-disable-next-line sonarjs/cognitive-complexity
 export function isDeepEqualData(obj1: any, obj2: any): boolean {
   // Check for strict equality first
   if (obj1 === obj2)
@@ -23,7 +22,7 @@ export function isDeepEqualData(obj1: any, obj2: any): boolean {
     return obj1 === obj2
 
   // If they are not strictly equal, they both need to be Objects
-
+  // eslint-disable-next-line ts/no-unsafe-member-access
   if (obj1.constructor !== obj2.constructor)
     return false
 
@@ -34,9 +33,11 @@ export function isDeepEqualData(obj1: any, obj2: any): boolean {
 
   // Handle arrays: compare length and then perform a recursive deep comparison on each item
   if (Array.isArray(obj1)) {
+    // eslint-disable-next-line ts/no-unsafe-member-access
     if (obj1.length !== obj2.length)
       return false
     for (let i = 0; i < obj1.length; i++) {
+      // eslint-disable-next-line ts/no-unsafe-member-access
       if (!isDeepEqualData(obj1[i], obj2[i]))
         return false
     }
@@ -44,9 +45,9 @@ export function isDeepEqualData(obj1: any, obj2: any): boolean {
   }
 
   // Compare the set of keys in each object
-
+  // eslint-disable-next-line ts/no-unsafe-argument
   const keys1 = Object.keys(obj1)
-
+  // eslint-disable-next-line ts/no-unsafe-argument
   const keys2 = Object.keys(obj2)
   if (keys1.length !== keys2.length)
     return false
@@ -55,7 +56,7 @@ export function isDeepEqualData(obj1: any, obj2: any): boolean {
   for (const key of keys1) {
     if (!keys2.includes(key))
       return false
-
+    // eslint-disable-next-line ts/no-unsafe-member-access
     if (!isDeepEqualData(obj1[key], obj2[key]))
       return false
   }

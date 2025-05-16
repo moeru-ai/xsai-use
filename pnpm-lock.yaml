@@ -13,6 +13,10 @@ catalogs:
     valibot:
       specifier: ^1.0.0
       version: 1.1.0
+  vite:
+    vite:
+      specifier: ^6.3.5
+      version: 6.3.5
   xsai:
     '@xsai/shared-chat':
       specifier: ^0.2.1
@@ -49,6 +53,77 @@ importers:
       vitest:
         specifier: 'catalog:'
         version: 3.1.3(@types/debug@4.1.12)(jiti@2.4.2)(jsdom@26.1.0)(yaml@2.7.1)
+
+  examples/react:
+    dependencies:
+      '@xsai-use/react':
+        specifier: 'workspace:'
+        version: link:../../packages/react
+    devDependencies:
+      '@eslint-react/eslint-plugin':
+        specifier: ^1.49.0
+        version: 1.49.0(eslint@9.26.0(jiti@2.4.2))(ts-api-utils@2.1.0(typescript@5.8.3))(typescript@5.8.3)
+      '@types/react':
+        specifier: ^19.1.3
+        version: 19.1.3
+      '@types/react-dom':
+        specifier: ^19.1.3
+        version: 19.1.3(@types/react@19.1.3)
+      '@vitejs/plugin-react':
+        specifier: ^4.4.1
+        version: 4.4.1(vite@6.3.5(jiti@2.4.2)(yaml@2.7.1))
+      '@xsai/tool':
+        specifier: catalog:xsai
+        version: 0.2.1(@valibot/to-json-schema@1.1.0(valibot@1.1.0(typescript@5.8.3)))(@zod/mini@4.0.0-beta.20250505T195954)(zod-to-json-schema@3.24.5(zod@3.24.4))(zod@3.24.4)
+      eslint-plugin-react-hooks:
+        specifier: ^5.2.0
+        version: 5.2.0(eslint@9.26.0(jiti@2.4.2))
+      eslint-plugin-react-refresh:
+        specifier: ^0.4.20
+        version: 0.4.20(eslint@9.26.0(jiti@2.4.2))
+      jsdom:
+        specifier: ^26.1.0
+        version: 26.1.0
+      react:
+        specifier: ^18.3.1
+        version: 18.3.1
+      react-dom:
+        specifier: ^18.3.1
+        version: 18.3.1(react@18.3.1)
+      valibot:
+        specifier: catalog:valibot
+        version: 1.1.0(typescript@5.8.3)
+      vite:
+        specifier: catalog:vite
+        version: 6.3.5(jiti@2.4.2)(yaml@2.7.1)
+
+  examples/svelte:
+    dependencies:
+      '@xsai-use/svelte':
+        specifier: 'workspace:'
+        version: link:../../packages/svelte
+      svelte:
+        specifier: ^5.0.0
+        version: 5.28.2
+    devDependencies:
+      '@eslint/js':
+        specifier: ^9.26.0
+        version: 9.26.0
+      '@sveltejs/vite-plugin-svelte':
+        specifier: ^5.0.3
+        version: 5.0.3(svelte@5.28.2)(vite@6.3.5(jiti@2.4.2)(yaml@2.7.1))
+      '@typescript-eslint/parser':
+        specifier: ^8.32.0
+        version: 8.32.0(eslint@9.26.0(jiti@2.4.2))(typescript@5.8.3)
+      eslint-plugin-svelte:
+        specifier: ^3.5.1
+        version: 3.5.1(eslint@9.26.0(jiti@2.4.2))(svelte@5.28.2)
+      typescript-eslint:
+        specifier: ^8.32.0
+        version: 8.32.0(eslint@9.26.0(jiti@2.4.2))(typescript@5.8.3)
+      vite:
+        specifier: catalog:vite
+        version: 6.3.5(jiti@2.4.2)(yaml@2.7.1)
 
   packages/eslint-config:
     dependencies:
@@ -105,7 +180,7 @@ importers:
         specifier: catalog:valibot
         version: 1.1.0(typescript@5.8.3)
       vite:
-        specifier: ^6.3.5
+        specifier: catalog:vite
         version: 6.3.5(jiti@2.4.2)(yaml@2.7.1)
 
   packages/shared:
@@ -122,15 +197,6 @@ importers:
       '@xsai-use/shared':
         specifier: 'workspace:'
         version: link:../shared
-      '@xsai/shared-chat':
-        specifier: catalog:xsai
-        version: 0.2.1
-      '@xsai/stream-text':
-        specifier: catalog:xsai
-        version: 0.2.1
-      svelte:
-        specifier: ^5.0.0
-        version: 5.28.2
     devDependencies:
       '@eslint/js':
         specifier: ^9.26.0
@@ -144,21 +210,25 @@ importers:
       eslint-plugin-svelte:
         specifier: ^3.5.1
         version: 3.5.1(eslint@9.26.0(jiti@2.4.2))(svelte@5.28.2)
+      svelte:
+        specifier: ^5.0.0
+        version: 5.28.2
       typescript-eslint:
         specifier: ^8.32.0
         version: 8.32.0(eslint@9.26.0(jiti@2.4.2))(typescript@5.8.3)
       vite:
-        specifier: ^6.3.5
+        specifier: catalog:vite
         version: 6.3.5(jiti@2.4.2)(yaml@2.7.1)
 
   packages/vue:
     dependencies:
-      '@xsai/shared-chat':
-        specifier: catalog:xsai
-        version: 0.2.1
-      '@xsai/stream-text':
-        specifier: catalog:xsai
-        version: 0.2.1
+      '@xsai-use/shared':
+        specifier: 'workspace:'
+        version: link:../shared
+    devDependencies:
+      vite:
+        specifier: catalog:vite
+        version: 6.3.5(jiti@2.4.2)(yaml@2.7.1)
       vue:
         specifier: ^3.0.0
         version: 3.5.13(typescript@5.8.3)
@@ -1164,8 +1234,14 @@ packages:
   '@xsai/shared-chat@0.2.1':
     resolution: {integrity: sha512-TdeLwS4S77D9UHt1mWDCiEG/9t0HqTzXFvlVAq3tmglX0G1FUn6+2z0wCQa2WqxFFF+GDP319XpI/d6CR8M3aw==}
 
+  '@xsai/shared-chat@0.2.2':
+    resolution: {integrity: sha512-0t4HwbK2jm5Lrixg9RnIsYTtAvlQNUdJXs2taW7PFaXfL5ktMy2IwZwW2nqK+Ig0RcLCMp3sScZujERHSDMtmg==}
+
   '@xsai/shared@0.2.1':
     resolution: {integrity: sha512-ddxVkwWoz2sgic8KbVSWp/1pmt3HDsSLcnAWxmI2bXvl2CHwumtMH+VqXPkLlFBdDXOpsn4T0EnoZXJeNl5uVQ==}
+
+  '@xsai/shared@0.2.2':
+    resolution: {integrity: sha512-bgalLd3samx36hDRRmu3M75LY5NfWwh3YRaMwY4Woy7X09JQx+vEqVpJcaIeqcmVqztm8NGYzj8hUru7lwPh0w==}
 
   '@xsai/stream-text@0.2.1':
     resolution: {integrity: sha512-kupWhArdIc+7uM4d3X8ku3PB7PuG1eLVk67WqXT9YNbMo+7ICUbsX4nWojVkpbVT9vnmy8ZG+gklyExSBZn2Ag==}
@@ -3133,8 +3209,8 @@ packages:
   xmlchars@2.2.0:
     resolution: {integrity: sha512-JZnDKK8B0RCDw84FNdDAIpZK+JuJw+s7Lz8nksI7SIuU3UXJJslUthsi+uWBUYOwPFwW7W7PRLRfUKpxjtjFCw==}
 
-  xsschema@0.2.1:
-    resolution: {integrity: sha512-CXOrTgQUljF3f9jy8VIqMSWBNhmInXtOv1rXngNlxC18PiJvVlqBrauTtBUWLAbJjqL7WWU8QeY9dZ6GbjU/+g==}
+  xsschema@0.2.2:
+    resolution: {integrity: sha512-lRKF/5sqN+Yv2v8UdzjddrfeM5UAOR98tIgFkwXODxMwco4ImCmM1JBhfWaDukPeWsU1eHmOta8AsNAXiJZ1Cw==}
     peerDependencies:
       '@valibot/to-json-schema': ^1.0.0
       '@zod/mini': ^4.0.0-beta
@@ -4264,7 +4340,13 @@ snapshots:
     dependencies:
       '@xsai/shared': 0.2.1
 
+  '@xsai/shared-chat@0.2.2':
+    dependencies:
+      '@xsai/shared': 0.2.2
+
   '@xsai/shared@0.2.1': {}
+
+  '@xsai/shared@0.2.2': {}
 
   '@xsai/stream-text@0.2.1':
     dependencies:
@@ -4272,9 +4354,9 @@ snapshots:
 
   '@xsai/tool@0.2.1(@valibot/to-json-schema@1.1.0(valibot@1.1.0(typescript@5.8.3)))(@zod/mini@4.0.0-beta.20250505T195954)(zod-to-json-schema@3.24.5(zod@3.24.4))(zod@3.24.4)':
     dependencies:
-      '@xsai/shared': 0.2.1
-      '@xsai/shared-chat': 0.2.1
-      xsschema: 0.2.1(@valibot/to-json-schema@1.1.0(valibot@1.1.0(typescript@5.8.3)))(@zod/mini@4.0.0-beta.20250505T195954)(zod-to-json-schema@3.24.5(zod@3.24.4))(zod@3.24.4)
+      '@xsai/shared': 0.2.2
+      '@xsai/shared-chat': 0.2.2
+      xsschema: 0.2.2(@valibot/to-json-schema@1.1.0(valibot@1.1.0(typescript@5.8.3)))(@zod/mini@4.0.0-beta.20250505T195954)(zod-to-json-schema@3.24.5(zod@3.24.4))(zod@3.24.4)
     transitivePeerDependencies:
       - '@valibot/to-json-schema'
       - '@zod/mini'
@@ -6566,7 +6648,7 @@ snapshots:
 
   xmlchars@2.2.0: {}
 
-  xsschema@0.2.1(@valibot/to-json-schema@1.1.0(valibot@1.1.0(typescript@5.8.3)))(@zod/mini@4.0.0-beta.20250505T195954)(zod-to-json-schema@3.24.5(zod@3.24.4))(zod@3.24.4):
+  xsschema@0.2.2(@valibot/to-json-schema@1.1.0(valibot@1.1.0(typescript@5.8.3)))(@zod/mini@4.0.0-beta.20250505T195954)(zod-to-json-schema@3.24.5(zod@3.24.4))(zod@3.24.4):
     optionalDependencies:
       '@valibot/to-json-schema': 1.1.0(valibot@1.1.0(typescript@5.8.3))
       '@zod/mini': 4.0.0-beta.20250505T195954

@@ -5,22 +5,29 @@
   "description": "when UI libs meet xsai",
   "author": "exoticknight",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/moeru-ai/xsai-use.git",
+    "directory": "packages/svelte"
+  },
+  "bugs": "https://github.com/moeru-ai/xsai-use/issues",
+  "keywords": [
+    "xsai",
+    "openai",
+    "ai",
+    "ui"
+  ],
   "sideEffects": false,
   "exports": "./src/index.ts",
   "files": [
     "dist"
   ],
-  "scripts": {
-    "build": "pkgroll",
-    "preview": "vite",
-    "test": "vitest run",
-    "coverage": "vitest run --coverage"
-  },
   "publishConfig": {
     "exports": {
       ".": {
         "types": "./dist/index.d.ts",
-        "default": "./dist/index.js"
+        "default": "./dist/index.js",
+        "svelte": "./dist/index.js"
       },
       "./package.json": "./package.json"
     },
@@ -28,18 +35,25 @@
     "types": "./dist/index.d.ts"
   },
   "svelte": "./dist/index.js",
-  "dependencies": {
-    "@xsai-use/shared": "workspace:",
-    "@xsai/shared-chat": "catalog:xsai",
-    "@xsai/stream-text": "catalog:xsai",
+  "scripts": {
+    "build": "pkgroll",
+    "preview": "vite",
+    "test": "vitest run",
+    "coverage": "vitest run --coverage"
+  },
+  "peerDependencies": {
     "svelte": "^5.0.0"
+  },
+  "dependencies": {
+    "@xsai-use/shared": "workspace:"
   },
   "devDependencies": {
     "@eslint/js": "^9.26.0",
     "@sveltejs/vite-plugin-svelte": "^5.0.3",
     "@typescript-eslint/parser": "^8.32.0",
     "eslint-plugin-svelte": "^3.5.1",
+    "svelte": "^5.0.0",
     "typescript-eslint": "^8.32.0",
-    "vite": "^6.3.5"
+    "vite": "catalog:vite"
   }
 }

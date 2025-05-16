@@ -75,12 +75,12 @@ export async function useApi(streamTextOptions: Omit<StreamTextOptions, 'onEvent
         case 'tool-call-result': {
           const part = parts.find((part): part is UIMessageToolCallPart => part.type === 'tool-call' && part.status === 'loading' && part.toolCall.id === event.id)
           if (part) {
-            if (event.error) {
+            if (event.error !== undefined) {
               part.status = 'error'
               part.error = event.error
               break
             }
-            if (event.result) {
+            if (event.result !== undefined) {
               part.status = 'complete'
               part.result = event.result
               break
@@ -88,6 +88,9 @@ export async function useApi(streamTextOptions: Omit<StreamTextOptions, 'onEvent
           }
           break
         }
+        case 'error':
+        case 'finish':
+        case 'refusal':
         default:
       }
 

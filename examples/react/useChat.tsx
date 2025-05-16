@@ -1,9 +1,9 @@
-import type { UIMessageToolCallPart } from '@xsai-use/shared'
+import type { UIMessageToolCallPart } from '@xsai-use/react'
+import { useChat } from '@xsai-use/react'
 import { tool } from '@xsai/tool'
-import { useEffect, useRef, useState } from 'react'
 
+import { useEffect, useRef, useState } from 'react'
 import { description, object, pipe, string } from 'valibot'
-import { useChat } from '../src'
 
 // Inline styles for the component
 const styles = {
@@ -353,7 +353,7 @@ function UIMessageToolPart({ part }: { part: UIMessageToolCallPart }) {
   }, [])
 
   const renderToolResult = () => {
-    if (part.status === 'error' && part.error) {
+    if (part.status === 'error' && part.error !== undefined) {
       return (
         <pre style={styles.toolResultCode}>
           {String(part.error)}
@@ -361,7 +361,7 @@ function UIMessageToolPart({ part }: { part: UIMessageToolCallPart }) {
       )
     }
 
-    if (part.status === 'complete' && part.result) {
+    if (part.status === 'complete' && part.result !== undefined) {
       const result = part.result
       if (typeof result === 'string') {
         return (
@@ -478,6 +478,17 @@ function ChatMessage({
             return <UIMessageTextPart key={index} text={part.text} />
           case 'tool-call':
             return <UIMessageToolPart key={part.toolCall.id} part={part} />
+          case 'audio':
+          case 'image':
+          case 'reasoning':
+          case 'refusal':
+            return (
+              <div key={index}>
+                unsupported part type:
+                {' '}
+                {part.type}
+              </div>
+            )
           default:
             return <div key={index}>unknown part</div>
         }
@@ -542,7 +553,7 @@ export function ChatComponent() {
         const calculatorTool = await tool({
           description: 'Calculate mathematical expression',
           execute: ({ expression }) => ({
-            // eslint-disable-next-line no-eval
+            // eslint-disable-next-line no-eval, ts/no-unsafe-assignment
             result: eval(expression),
           }),
           name: 'calculator',
@@ -567,6 +578,7 @@ export function ChatComponent() {
       }
     }
 
+    // eslint-disable-next-line ts/no-floating-promises
     loadTools()
   }, [])
 
@@ -640,6 +652,7 @@ export function ChatComponent() {
       </div>
 
       <div style={styles.messagesContainer}>
+        {/* eslint-disable-next-line ts/strict-boolean-expressions */}
         {messages.map((message, idx) => message
           ? (
               <ChatMessage
@@ -652,6 +665,7 @@ export function ChatComponent() {
           : 'null')}
       </div>
 
+      {/* eslint-disable-next-line ts/no-misused-promises */}
       <form data-test-id="form" onSubmit={handleSubmit} style={styles.inputContainer}>
         <input
           data-test-id="input"

@@ -13,7 +13,10 @@
     "packages/shared",
     "packages/react",
     "packages/vue",
-    "packages/svelte"
+    "packages/svelte",
+    "examples/react",
+    "examples/svelte",
+    "examples/vue"
   ],
   "scripts": {
     "build": "pnpm -r build",

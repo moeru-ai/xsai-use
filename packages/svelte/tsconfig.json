@@ -3,9 +3,6 @@
   "include": [
     "src/**/*.ts",
     "src/**/*.svelte.ts",
-    "src/**/*.svelte",
-    "examples/**/*.ts",
-    "examples/**/*.svelte.ts",
-    "examples/**/*.svelte"
+    "src/**/*.svelte"
   ]
 }
