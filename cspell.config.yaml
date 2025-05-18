@@ -1,10 +1,11 @@
-version: '0.2'
+version: "0.2"
 ignorePaths: []
 dictionaryDefinitions: []
 dictionaries: []
 words:
   - contentlayer
   - eslintcache
+  - importantimport
   - Moeru
   - moeru-ai
   - nemo
