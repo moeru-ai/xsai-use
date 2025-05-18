@@ -711,7 +711,7 @@ export function ChatComponent() {
 }
 
 // Usage example
-export default function ChatExample() {
+export function App() {
   return (
     <div style={{ display: 'flex', justifyContent: 'center', padding: '20px' }}>
       <ChatComponent />

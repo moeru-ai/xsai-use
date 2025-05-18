@@ -10,8 +10,8 @@
     "isolatedModules": true
   },
   "include": [
-    "src/**/*.ts",
-    "src/**/*.svelte.ts",
-    "src/**/*.svelte"
+    "examples/svelte/src",
+    "packages/svelte/src",
+    "packages/svelte/test"
   ]
 }

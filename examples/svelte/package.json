@@ -11,13 +11,5 @@
   "dependencies": {
     "@xsai-use/svelte": "workspace:",
     "svelte": "^5.0.0"
-  },
-  "devDependencies": {
-    "@eslint/js": "^9.26.0",
-    "@sveltejs/vite-plugin-svelte": "^5.0.3",
-    "@typescript-eslint/parser": "^8.32.0",
-    "eslint-plugin-svelte": "^3.5.1",
-    "typescript-eslint": "^8.32.0",
-    "vite": "catalog:vite"
   }
 }
