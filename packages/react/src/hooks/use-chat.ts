@@ -1,5 +1,5 @@
 import type { InputMessage, UIMessage, UseChatOptions, UseChatStatus } from '@xsai-use/shared'
-import { dateNumberIDGenerate, extractUIMessageParts, useApi } from '@xsai-use/shared'
+import { callApi, dateNumberIDGenerate, extractUIMessageParts } from '@xsai-use/shared'
 
 import { useCallback, useMemo, useRef, useState } from 'react'
 
@@ -13,8 +13,6 @@ declare global {
 }
 
 const DEFAULT_ID_GENERATOR = () => dateNumberIDGenerate().toString()
-
-export type { UseChatOptions, UseChatStatus }
 
 export function useChat(options: UseChatOptions) {
   const {
@@ -75,7 +73,7 @@ export function useChat(options: UseChatOptions) {
       try {
         abortControllerRef.current = new AbortController()
 
-        await useApi({
+        await callApi({
           ...streamTextOptions,
           messages: [...UIMessages, userMessage],
           onFinish: () => {

@@ -7,12 +7,10 @@ import type {
 import {
   dateNumberIDGenerate,
   extractUIMessageParts,
-  useApi,
+  callApi,
 } from '@xsai-use/shared'
 
 const DEFAULT_ID_GENERATOR = () => dateNumberIDGenerate().toString()
-
-export type { UseChatOptions, UseChatStatus }
 
 export class Chat {
   readonly #options: UseChatOptions = {}
@@ -99,7 +97,7 @@ export class Chat {
     try {
       this.#abortController = new AbortController()
 
-      await useApi(
+      await callApi(
         {
           ...this.#streamTextOptions,
           messages: [...originalMessages, userMessage],

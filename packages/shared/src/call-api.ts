@@ -5,7 +5,7 @@ import { streamText } from '@xsai/stream-text'
 
 const DEFAULT_ID_GENERATOR = () => dateNumberIDGenerate().toString()
 
-export async function useApi(streamTextOptions: Omit<StreamTextOptions, 'onEvent'>, {
+export async function callApi(streamTextOptions: Omit<StreamTextOptions, 'onEvent'>, {
   onUpdate,
   updatingMessage,
   generateID = DEFAULT_ID_GENERATOR,
