@@ -32,7 +32,7 @@
       </li>
     {/each}
   </ul>
-  <form onsubmit={chat.handleSubmit}>
+  <form on:submit={chat.handleSubmit}>
     <input bind:value={chat.input} />
     <button type='submit'>Send</button>
   </form>
