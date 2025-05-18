@@ -1,10 +1,11 @@
 {
   "name": "@xsai-use/examples-svelte",
   "type": "module",
-  "version": "0.1.0",
+  "private": true,
   "description": "when UI libs meet xsai",
   "author": "Moeru AI",
   "license": "MIT",
+  "sideEffects": false,
   "scripts": {
     "preview": "vite"
   },
