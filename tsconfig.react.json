@@ -4,7 +4,8 @@
     "@importantimport/tsconfig/parts/jsx-react.json"
   ],
   "include": [
-    "packages/shared/src",
-    "packages/shared/test"
+    "examples/react/src",
+    "packages/react/src",
+    "packages/react/test"
   ]
 }
