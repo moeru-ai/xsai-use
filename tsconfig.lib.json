@@ -1,8 +1,5 @@
 {
-  "extends": [
-    "@importantimport/tsconfig/app.json",
-    "@importantimport/tsconfig/parts/jsx-react.json"
-  ],
+  "extends": "@importantimport/tsconfig/app.json",
   "include": [
     "packages/shared/src",
     "packages/shared/test"
