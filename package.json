@@ -1,23 +1,9 @@
 {
   "name": "xsai-use",
   "type": "module",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "private": true,
   "packageManager": "pnpm@10.0.0",
-  "description": "when UI libs meet xsai",
-  "author": "exoticknight",
-  "license": "Apache-2.0",
-  "repository": "github:moeru-ai/xsai-use",
-  "workspaces": [
-    "packages/eslint-config",
-    "packages/shared",
-    "packages/react",
-    "packages/vue",
-    "packages/svelte",
-    "examples/react",
-    "examples/svelte",
-    "examples/vue"
-  ],
   "scripts": {
     "build": "pnpm -r build",
     "lint": "eslint --cache",
