@@ -46,7 +46,6 @@
     "@xsai-use/shared": "workspace:"
   },
   "devDependencies": {
-    "vite": "catalog:vite",
     "vue": "^3.0.0"
   }
 }

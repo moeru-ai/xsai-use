@@ -11,9 +11,5 @@
   "dependencies": {
     "@xsai-use/svelte": "workspace:",
     "svelte": "^5.0.0"
-  },
-  "devDependencies": {
-    "@sveltejs/vite-plugin-svelte": "^5.0.3",
-    "vite": "catalog:vite"
   }
 }
