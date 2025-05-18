@@ -10,7 +10,7 @@ export default ts.config(
   ...svelte.configs.recommended,
   ...await antfu({
     typescript: {
-      tsconfig: './tsconfig.json',
+      tsconfigPath: './tsconfig.json',
     },
     svelte: true,
   }),

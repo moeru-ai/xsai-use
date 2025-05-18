@@ -1,6 +1,4 @@
 {
-  "extends": [
-    "./packages/eslint-config/tsconfig.node.json"
-  ],
+  "extends": "@importantimport/tsconfig/node.json",
   "include": ["**/*.config.ts", "**/*.config.js", "**/scripts/*.ts", "**/scripts/*.js"]
 }
