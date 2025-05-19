@@ -67,6 +67,59 @@ export class Chat {
     this.#streamTextOptions = streamTextOptions
   }
 
+  #request = async ({
+      messages
+    }: {
+      messages: UIMessage[]
+    }) => {
+    this.#status = 'loading'
+    this.#error = null
+
+    try {
+      this.#abortController = new AbortController()
+
+      await callApi(
+        {
+          ...this.#streamTextOptions,
+          messages,
+          onFinish: () => {
+            this.#status = 'idle'
+
+            const messages = this.#messages
+            this.#onFinish?.()
+            this.#abortController = null
+          },
+          signal: this.#abortController.signal,
+        },
+        {
+          generateID: this.#generateID,
+          updatingMessage: {
+            id: this.#generateID(),
+            parts: [],
+            role: 'assistant',
+          },
+          onUpdate: (message) => {
+            const clonedMessage = structuredClone(message)
+            const messages = this.#messages
+
+            if (messages.at(-1)?.role === 'assistant') {
+              this.#messages = messages.slice(0, -1).concat(clonedMessage)
+            }
+            else {
+              this.#messages = messages.concat(clonedMessage)
+            }
+          },
+        },
+      )
+    }
+    catch (err) {
+      this.#status = 'error'
+      const actualError = err instanceof Error ? err : new Error(String(err))
+      this.#error = actualError
+      this.#abortController = null
+    }
+  }
+
   submitMessage = async (message: InputMessage) => {
     if (this.#status !== 'idle') {
       return
