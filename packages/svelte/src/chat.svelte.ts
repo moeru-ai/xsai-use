@@ -5,16 +5,14 @@ import type {
   UseChatStatus,
 } from '@xsai-use/shared'
 import {
-  dateNumberIDGenerate,
+  generateWeakID,
   extractUIMessageParts,
   callApi,
 } from '@xsai-use/shared'
 
-const DEFAULT_ID_GENERATOR = () => dateNumberIDGenerate().toString()
-
 export class Chat {
   readonly #options: UseChatOptions = {}
-  readonly #generateID = $derived(this.#options.generateID ?? DEFAULT_ID_GENERATOR)
+  readonly #generateID = $derived(this.#options.generateID ?? generateWeakID)
   readonly id: string = $derived(this.#options.id ?? this.#generateID())
   readonly #onFinish = $derived(this.#options.onFinish)
   readonly #preventDefault = $derived(this.#options.preventDefault ?? false)
@@ -105,7 +103,7 @@ export class Chat {
             this.#status = 'idle'
 
             const messages = this.#messages
-            this.#onFinish?.(messages[messages.length - 1])
+            this.#onFinish?.()
             this.#abortController = null
           },
           signal: this.#abortController.signal,

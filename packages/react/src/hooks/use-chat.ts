@@ -1,5 +1,5 @@
 import type { InputMessage, UIMessage, UseChatOptions, UseChatStatus } from '@xsai-use/shared'
-import { callApi, dateNumberIDGenerate, extractUIMessageParts } from '@xsai-use/shared'
+import { callApi, extractUIMessageParts, generateWeakID } from '@xsai-use/shared'
 
 import { useCallback, useMemo, useRef, useState } from 'react'
 
@@ -12,19 +12,15 @@ declare global {
   }
 }
 
-const DEFAULT_ID_GENERATOR = () => dateNumberIDGenerate().toString()
-
 export function useChat(options: UseChatOptions) {
   const {
     id,
-    generateID = DEFAULT_ID_GENERATOR,
+    generateID = generateWeakID,
     initialMessages = [],
     onFinish,
     preventDefault = false,
     ...streamTextOptions
   } = options
-
-  const [chatID] = useState(id ?? generateID())
 
   const stableInitialMessages = useStableValue(initialMessages ?? [])
   const initialUIMessages = useMemo(() => stableInitialMessages.map((m) => {
@@ -33,15 +29,90 @@ export function useChat(options: UseChatOptions) {
       id: generateID(),
       parts: extractUIMessageParts(m),
     }
-  }), [stableInitialMessages])
+  }), [stableInitialMessages, generateID])
 
-  const [UIMessages, setUIMessages] = useState<UIMessage[]>(initialUIMessages)
-  const [input, setInput] = useState('')
+  const [uiMessages, setUIMessages] = useState<UIMessage[]>(initialUIMessages)
+  // keep a reference to the messages
+  const uiMessagesRef = useRef<UIMessage[]>(uiMessages)
   const [status, setStatus] = useState<UseChatStatus>('idle')
+  const setMessages = useCallback((messages: UIMessage[]) => {
+    if (status !== 'loading') {
+      return
+    }
+    uiMessagesRef.current = messages
+    setUIMessages(messages)
+  }, [status])
+
+  const [input, setInput] = useState('')
   const [error, setError] = useState<Error | null>(null)
+  const lastUIMessage = useRef<null | UIMessage>(null)
+  const stableStreamTextOptions = useStableValue(streamTextOptions)
+
   const abortControllerRef = useRef<AbortController | null>(null)
 
-  const lastUIMessage = useRef<null | UIMessage>(null)
+  const request = useCallback(
+    async ({
+      messages,
+    }: {
+      messages: UIMessage[]
+    }) => {
+      uiMessagesRef.current = messages
+      setUIMessages(uiMessagesRef.current)
+
+      setStatus('loading')
+      setError(null)
+
+      try {
+        abortControllerRef.current = new AbortController()
+
+        await callApi({
+          ...stableStreamTextOptions,
+          messages: uiMessagesRef.current,
+          onFinish: () => {
+            setStatus('idle')
+            lastUIMessage.current = null
+            // eslint-disable-next-line ts/no-floating-promises
+            onFinish?.()
+          },
+          signal: abortControllerRef.current.signal,
+        }, {
+          generateID,
+          updatingMessage: {
+            id: generateID(),
+            parts: [],
+            role: 'assistant',
+          },
+          onUpdate: (message) => {
+            const clonedMessage = structuredClone(message)
+
+            const latestMessages = uiMessagesRef.current
+            const messages = [
+              ...latestMessages.at(-1)?.role === 'assistant'
+                ? latestMessages.slice(0, latestMessages.length - 1)
+                : latestMessages,
+              clonedMessage,
+            ]
+
+            // maybe we should throttle this
+            uiMessagesRef.current = messages
+            setUIMessages(messages)
+          },
+        })
+      }
+      catch (error) {
+        setStatus('error')
+        const actualError = error instanceof Error ? error : new Error(String(error))
+        setError(actualError)
+        lastUIMessage.current = null
+      }
+    },
+    [
+      generateID,
+      onFinish,
+      stableStreamTextOptions,
+      abortControllerRef,
+    ],
+  )
 
   const submitMessage = useCallback(
     async (message: InputMessage) => {
@@ -65,56 +136,17 @@ export function useChat(options: UseChatOptions) {
       } as UIMessage
       userMessage.parts = extractUIMessageParts(userMessage)
 
-      setUIMessages(messages => [...messages, userMessage])
-
-      setStatus('loading')
-      setError(null)
-
-      try {
-        abortControllerRef.current = new AbortController()
-
-        await callApi({
-          ...streamTextOptions,
-          messages: [...UIMessages, userMessage],
-          onFinish: () => {
-            setStatus('idle')
-            // eslint-disable-next-line ts/no-floating-promises
-            onFinish?.(UIMessages[UIMessages.length - 1])
-            lastUIMessage.current = null
-          },
-          signal: abortControllerRef.current.signal,
-        }, {
-          generateID,
-          updatingMessage: {
-            id: generateID(),
-            parts: [],
-            role: 'assistant',
-          },
-          onUpdate: (message) => {
-            const clonedMessage = structuredClone(message)
-
-            // maybe we should throttle this
-            setUIMessages(messages => [
-              ...messages.at(-1)?.role === 'assistant' ? messages.slice(0, messages.length - 1) : messages,
-              clonedMessage,
-            ])
-          },
-        })
-      }
-      catch (error) {
-        setStatus('error')
-        const actualError = error instanceof Error ? error : new Error(String(error))
-        setError(actualError)
-        lastUIMessage.current = null
-      }
+      await request({
+        messages: [
+          ...uiMessagesRef.current,
+          userMessage,
+        ],
+      })
     },
     [
-      // props
-      chatID,
-      initialMessages,
-      onFinish,
-      // state
-      UIMessages,
+      request,
+      generateID,
+      uiMessagesRef,
       status,
     ],
   )
@@ -144,18 +176,42 @@ export function useChat(options: UseChatOptions) {
   ])
 
   const stop = useCallback(() => {
-    if (!(abortControllerRef.current))
-      return
-    abortControllerRef.current.abort()
-    setStatus('idle')
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort()
+      setStatus('idle')
+    }
   }, [])
 
-  const reload = useCallback(() => {
+  const reload = useCallback(
+    async (id?: string) => {
+      const latestMessages = uiMessagesRef.current
 
-  }, [chatID, UIMessages, submitMessage])
+      if (latestMessages.length === 0) {
+        return
+      }
+
+      let msgIdx = latestMessages.findLastIndex(m => m.role === 'user' && (id === undefined || m.id === id))
+      if (msgIdx === -1) {
+        msgIdx = latestMessages.findLastIndex(m => m.role === 'user')
+      }
+      // still not found, return
+      if (msgIdx === -1) {
+        return
+      }
+
+      await request({
+        messages: latestMessages.slice(0, msgIdx + 1),
+      })
+    },
+    [
+      request,
+      uiMessagesRef,
+    ],
+  )
 
   const reset = useCallback(() => {
     stop()
+    uiMessagesRef.current = initialUIMessages
     setUIMessages(initialUIMessages)
     setInput('')
     setError(null)
@@ -169,7 +225,8 @@ export function useChat(options: UseChatOptions) {
     },
     handleSubmit,
     input,
-    messages: UIMessages,
+    messages: uiMessages,
+    setMessages,
     reload,
     reset,
     setInput,

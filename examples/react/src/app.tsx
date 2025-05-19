@@ -98,10 +98,12 @@ function ChatMessage({
   message,
   isError = false,
   error,
+  reload,
 }: {
   message: ReturnType<typeof useChat>['messages'][number]
   isError?: boolean
   error?: Error | null
+  reload?: (id: string) => void | Promise<void>
 }) {
   return (
     <div className={
@@ -141,6 +143,14 @@ function ChatMessage({
           </div>
         )}
       </div>
+      {
+        message.role === 'user' && (
+          <div className="chat-footer opacity-50">
+            {/* eslint-disable-next-line ts/no-misused-promises,ts/promise-function-async */}
+            <a className="link" onClick={() => reload?.(message.id)}>reload from here</a>
+          </div>
+        )
+      }
     </div>
   )
 }
@@ -219,6 +229,7 @@ export function ChatComponent() {
     error,
     reset,
     stop,
+    reload,
   } = useChat({
     id: 'simple-chat',
     preventDefault: true,
@@ -284,6 +295,7 @@ export function ChatComponent() {
                 message={message}
                 isError={idx === messages.length - 1 && status === 'error'}
                 error={idx === messages.length - 1 ? error : null}
+                reload={reload}
               />
             )
           : 'null')}
@@ -319,7 +331,9 @@ export function ChatComponent() {
             }}
             type="button"
           >
-            Reset
+            {status === 'loading'
+              ? <span className="loading loading-dots loading-md"></span>
+              : 'Reset'}
           </button>
         </div>
       </form>

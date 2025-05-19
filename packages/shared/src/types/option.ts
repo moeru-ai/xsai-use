@@ -10,7 +10,7 @@ export type UseChatOptions = Omit<StreamTextOptions, 'onChunk' | 'onFinish'> & {
   id?: string
   generateID?: () => string
   initialMessages?: Message[]
-  onFinish?: (message: Message) => Promise<void> | void
+  onFinish?: () => Promise<void> | void
   preventDefault?: boolean
 }
 

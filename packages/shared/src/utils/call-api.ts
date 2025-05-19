@@ -1,14 +1,12 @@
 import type { StreamTextOptions } from '@xsai/stream-text'
-import type { UIMessage, UIMessageToolCallPart } from './types'
-import { dateNumberIDGenerate } from '@xsai-use/shared'
+import type { UIMessage, UIMessageToolCallPart } from '../types'
 import { streamText } from '@xsai/stream-text'
-
-const DEFAULT_ID_GENERATOR = () => dateNumberIDGenerate().toString()
+import { generateWeakID } from './generate-weak-id'
 
 export async function callApi(streamTextOptions: Omit<StreamTextOptions, 'onEvent'>, {
   onUpdate,
   updatingMessage,
-  generateID = DEFAULT_ID_GENERATOR,
+  generateID = generateWeakID,
 }: {
   onUpdate: (message: UIMessage) => void
   updatingMessage?: UIMessage
