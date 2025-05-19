@@ -34,13 +34,18 @@ export function useChat(options: UseChatOptions) {
   const [uiMessages, setUIMessages] = useState<UIMessage[]>(initialUIMessages)
   // keep a reference to the messages
   const uiMessagesRef = useRef<UIMessage[]>(uiMessages)
+
+  const setInnerMessages = (messages: UIMessage[]) => {
+    uiMessagesRef.current = messages
+    setUIMessages(messages)
+  }
+
   const [status, setStatus] = useState<UseChatStatus>('idle')
   const setMessages = useCallback((messages: UIMessage[]) => {
     if (status !== 'loading') {
       return
     }
-    uiMessagesRef.current = messages
-    setUIMessages(messages)
+    setInnerMessages(messages)
   }, [status])
 
   const [input, setInput] = useState('')
@@ -56,9 +61,6 @@ export function useChat(options: UseChatOptions) {
     }: {
       messages: UIMessage[]
     }) => {
-      uiMessagesRef.current = messages
-      setUIMessages(uiMessagesRef.current)
-
       setStatus('loading')
       setError(null)
 
@@ -67,7 +69,7 @@ export function useChat(options: UseChatOptions) {
 
         await callApi({
           ...stableStreamTextOptions,
-          messages: uiMessagesRef.current,
+          messages,
           onFinish: () => {
             setStatus('idle')
             lastUIMessage.current = null
@@ -94,8 +96,7 @@ export function useChat(options: UseChatOptions) {
             ]
 
             // maybe we should throttle this
-            uiMessagesRef.current = messages
-            setUIMessages(messages)
+            setInnerMessages(messages)
           },
         })
       }
@@ -136,11 +137,15 @@ export function useChat(options: UseChatOptions) {
       } as UIMessage
       userMessage.parts = extractUIMessageParts(userMessage)
 
+      const newMessages = [
+        ...uiMessagesRef.current,
+        userMessage,
+      ]
+
+      setInnerMessages(newMessages)
+
       await request({
-        messages: [
-          ...uiMessagesRef.current,
-          userMessage,
-        ],
+        messages: newMessages,
       })
     },
     [
@@ -211,8 +216,7 @@ export function useChat(options: UseChatOptions) {
 
   const reset = useCallback(() => {
     stop()
-    uiMessagesRef.current = initialUIMessages
-    setUIMessages(initialUIMessages)
+    setInnerMessages(initialUIMessages)
     setInput('')
     setError(null)
     setStatus('idle')
