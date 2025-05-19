@@ -9,6 +9,7 @@ import {
   extractUIMessageParts,
   generateWeakID,
 } from '@xsai-use/shared'
+import { untrack } from 'svelte'
 
 export class Chat {
   readonly #options: UseChatOptions = {}
@@ -45,7 +46,7 @@ export class Chat {
 
   input = $state<string>('')
 
-  #abortController = $state<AbortController | null>(null)
+  #abortController: AbortController | null = null
 
   constructor(options: UseChatOptions) {
     this.#options = options
@@ -59,7 +60,8 @@ export class Chat {
       ...streamTextOptions
     } = this.#options
 
-    this.#streamTextOptions = $derived(streamTextOptions)
+    this.#streamTextOptions = streamTextOptions
+    this.messages = this.#initialUIMessages
   }
 
   #request = async ({
@@ -95,13 +97,13 @@ export class Chat {
           },
           onUpdate: (message) => {
             const clonedMessage = structuredClone(message)
-            const messages = this.#messages
+            const messages = this.messages
 
             if (messages.at(-1)?.role === 'assistant') {
-              this.#messages = messages.slice(0, -1).concat(clonedMessage)
+              this.messages = messages.slice(0, -1).concat(clonedMessage)
             }
             else {
-              this.#messages = messages.concat(clonedMessage)
+              this.messages = messages.concat(clonedMessage)
             }
           },
         },
@@ -134,10 +136,10 @@ export class Chat {
     } as UIMessage
     userMessage.parts = extractUIMessageParts(userMessage)
 
-    this.#messages = [...this.#messages, userMessage]
+    this.messages = this.messages.concat(userMessage)
 
     await this.#request({
-      messages: this.#messages,
+      messages: $state.snapshot(this.messages),
     })
   }
 
@@ -175,13 +177,13 @@ export class Chat {
       return
     }
 
-    if (this.#messages.length === 0) {
+    if (this.messages.length === 0) {
       return
     }
 
-    let msgIdx = this.#messages.findLastIndex(m => m.role === 'user' && (id === undefined || m.id === id))
+    let msgIdx = this.messages.findLastIndex(m => m.role === 'user' && (id === undefined || m.id === id))
     if (msgIdx === -1) {
-      msgIdx = this.#messages.findLastIndex(m => m.role === 'user')
+      msgIdx = this.messages.findLastIndex(m => m.role === 'user')
     }
     // still not found, return
     if (msgIdx === -1) {
@@ -189,13 +191,13 @@ export class Chat {
     }
 
     await this.#request({
-      messages: this.#messages.slice(0, msgIdx + 1),
+      messages: $state.snapshot(this.messages.slice(0, msgIdx + 1)),
     })
   }
 
   reset = () => {
     this.stop()
-    this.#messages = this.#initialUIMessages
+    this.messages = this.#initialUIMessages
     this.input = ''
     this.#error = null
     this.#status = 'idle'

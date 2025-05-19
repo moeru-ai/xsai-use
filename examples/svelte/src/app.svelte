@@ -1,5 +1,6 @@
 <script lang='ts'>
   import { Chat } from '@xsai-use/svelte'
+  import ChatBubble from './message-bubble.svelte'
 
   const chat = new Chat({
     id: 'simple-chat',
@@ -27,81 +28,70 @@
   }
 </script>
 
-<main class='chatContainer'>
-  <div class='chatHeader'>
-    <h2>useChat</h2>
-  </div>
-
-  <div class='chatToolsSection'>
-    <div class='toolsContainer'>
-      <span>Available tools:</span>
+<main style='display: flex; justify-content: center; padding: 20px;'>
+  <div class='chatContainer'>
+    <div class='chatHeader'>
+      <h2>useChat</h2>
     </div>
-  </div>
 
-  <div class='messagesContainer'>
-    {#each chat.messages as message, messageIndex (messageIndex)}
-      <li>
-        <div class='chatHeader'>{message.role}</div>
-        <div class='chatBubble'>
-          {#each message.parts as part, partIndex (partIndex)}
-            {#if part.type === 'text'}
-              <div>{part.text}</div>
-            {/if}
-          {/each}
-        </div>
-      </li>
-    {/each}
-  </div>
-
-  <form on:submit={chat.handleSubmit} class='inputContainer'>
-    <input bind:value={chat.input} />
-    <button type='submit'>Send</button>
-
-    <div class='join' style='width: 100%;'>
-      <input
-        type='text'
-        class='input join-item'
-        placeholder='say something...'
-        style='width: 100%;'
-        bind:value={chat.input}
-        disabled={chat.status !== 'idle'}
-      />
-      <button
-        class='btn join-item'
-        on:click={handleSendButtonClick}
-        type={chat.status === 'loading' ? 'button' : 'submit'}
-      >
-        {#if chat.status === 'loading'}
-          <span class='loading loading-dots loading-md'></span>
-        {:else}
-          Send
-        {/if}
-      </button>
-      <button
-        class='btn join-item'
-        on:click={(e) => {
-          e.preventDefault()
-          chat.reset()
-        }}
-        type='button'
-      >
-        {#if chat.status === 'loading'}
-          <span class='loading loading-dots loading-md'></span>
-        {:else}
-          Reset
-        {/if}
-      </button>
+    <div class='chatToolsSection'>
+      <div class='toolsContainer'>
+        <span>Available tools:</span>
+      </div>
     </div>
-  </form>
+
+    <div class='messagesContainer'>
+      {#each chat.messages as message, messageIndex (messageIndex)}
+        <ChatBubble
+          {message}
+          isError={messageIndex === chat.messages.length - 1 && chat.status === 'error'}
+          error={messageIndex === chat.messages.length - 1 ? chat.error : null}
+          reload={chat.reload}
+        />
+      {/each}
+    </div>
+
+    <form on:submit={chat.handleSubmit} class='inputContainer'>
+      <div class='join' style='width: 100%;'>
+        <input
+          type='text'
+          class='input join-item'
+          placeholder='say something...'
+          style='width: 100%;'
+          bind:value={chat.input}
+          disabled={chat.status !== 'idle'}
+        />
+        <button
+          class='btn join-item'
+          on:click={handleSendButtonClick}
+          type={chat.status === 'loading' ? 'button' : 'submit'}
+        >
+          {#if chat.status === 'loading'}
+            <span class='loading loading-dots loading-md'></span>
+          {:else}
+            Send
+          {/if}
+        </button>
+        <button
+          class='btn join-item'
+          on:click={(e) => {
+            e.preventDefault()
+            chat.reset()
+          }}
+          type='button'
+        >
+          {#if chat.status === 'loading'}
+            <span class='loading loading-dots loading-md'></span>
+          {:else}
+            Reset
+          {/if}
+        </button>
+      </div>
+    </form>
+  </div>
 </main>
 
 <style>
-  .chatBubble {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-
   .chatHeader {
     background-color: #f0f2f5;
     border-bottom: 1px solid #ddd;
@@ -136,10 +126,6 @@
     gap: 10px;
     overflow-y: auto;
     padding: 15px;
-  }
-
-  .errorMessage {
-    font-size: 12px;
   }
 
   .toolsContainer {
