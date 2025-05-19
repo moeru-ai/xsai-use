@@ -60,7 +60,7 @@ const styles = {
     alignItems: 'center',
     justifyContent: 'flex-start',
     gap: '8px',
-    minHeight: 'fit-content',
+    minHeight: '35px',
   },
   toolBadge: {
     backgroundColor: '#e9ecef',
@@ -136,6 +136,7 @@ function ChatMessage({
         })}
         {isError && (
           <div style={styles.errorMessage}>
+            ❌
             {error?.message}
           </div>
         )}

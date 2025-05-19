@@ -4,6 +4,7 @@ dictionaryDefinitions: []
 dictionaries: []
 words:
   - contentlayer
+  - daisyui
   - eslintcache
   - importantimport
   - Moeru
