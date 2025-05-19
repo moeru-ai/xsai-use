@@ -5,9 +5,9 @@ import type {
   UseChatStatus,
 } from '@xsai-use/shared'
 import {
-  generateWeakID,
-  extractUIMessageParts,
   callApi,
+  extractUIMessageParts,
+  generateWeakID,
 } from '@xsai-use/shared'
 
 export class Chat {
@@ -51,27 +51,22 @@ export class Chat {
     this.#options = options
 
     const {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       id,
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       generateID,
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       initialMessages,
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       onFinish,
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       preventDefault,
       ...streamTextOptions
     } = this.#options
 
-    this.#streamTextOptions = streamTextOptions
+    this.#streamTextOptions = $derived(streamTextOptions)
   }
 
   #request = async ({
-      messages
-    }: {
-      messages: UIMessage[]
-    }) => {
+    messages,
+  }: {
+    messages: UIMessage[]
+  }) => {
     this.#status = 'loading'
     this.#error = null
 
@@ -85,7 +80,7 @@ export class Chat {
           onFinish: () => {
             this.#status = 'idle'
 
-            const messages = this.#messages
+            // eslint-disable-next-line ts/no-floating-promises
             this.#onFinish?.()
             this.#abortController = null
           },
@@ -139,55 +134,11 @@ export class Chat {
     } as UIMessage
     userMessage.parts = extractUIMessageParts(userMessage)
 
-    const originalMessages = this.#messages
-    this.#messages = [...originalMessages, userMessage]
+    this.#messages = [...this.#messages, userMessage]
 
-    this.#status = 'loading'
-    this.#error = null
-
-    try {
-      this.#abortController = new AbortController()
-
-      await callApi(
-        {
-          ...this.#streamTextOptions,
-          messages: [...originalMessages, userMessage],
-          onFinish: () => {
-            this.#status = 'idle'
-
-            const messages = this.#messages
-            this.#onFinish?.()
-            this.#abortController = null
-          },
-          signal: this.#abortController.signal,
-        },
-        {
-          generateID: this.#generateID,
-          updatingMessage: {
-            id: this.#generateID(),
-            parts: [],
-            role: 'assistant',
-          },
-          onUpdate: (message) => {
-            const clonedMessage = structuredClone(message)
-            const messages = this.#messages
-
-            if (messages.at(-1)?.role === 'assistant') {
-              this.#messages = messages.slice(0, -1).concat(clonedMessage)
-            }
-            else {
-              this.#messages = messages.concat(clonedMessage)
-            }
-          },
-        },
-      )
-    }
-    catch (err) {
-      this.#status = 'error'
-      const actualError = err instanceof Error ? err : new Error(String(err))
-      this.#error = actualError
-      this.#abortController = null
-    }
+    await this.#request({
+      messages: this.#messages,
+    })
   }
 
   handleSubmit = async (event: SubmitEvent) => {
@@ -219,8 +170,27 @@ export class Chat {
     }
   }
 
-  reload = () => {
+  reload = async (id?: string) => {
+    if (this.#status !== 'idle') {
+      return
+    }
 
+    if (this.#messages.length === 0) {
+      return
+    }
+
+    let msgIdx = this.#messages.findLastIndex(m => m.role === 'user' && (id === undefined || m.id === id))
+    if (msgIdx === -1) {
+      msgIdx = this.#messages.findLastIndex(m => m.role === 'user')
+    }
+    // still not found, return
+    if (msgIdx === -1) {
+      return
+    }
+
+    await this.#request({
+      messages: this.#messages.slice(0, msgIdx + 1),
+    })
   }
 
   reset = () => {

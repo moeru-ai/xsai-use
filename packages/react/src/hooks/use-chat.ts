@@ -189,6 +189,9 @@ export function useChat(options: UseChatOptions) {
 
   const reload = useCallback(
     async (id?: string) => {
+      if (status !== 'idle') {
+        return
+      }
       const latestMessages = uiMessagesRef.current
 
       if (latestMessages.length === 0) {
@@ -209,6 +212,7 @@ export function useChat(options: UseChatOptions) {
       })
     },
     [
+      status,
       request,
       uiMessagesRef,
     ],

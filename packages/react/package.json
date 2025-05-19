@@ -35,7 +35,6 @@
   },
   "scripts": {
     "build": "pkgroll",
-    "preview": "vite",
     "test": "vitest run",
     "coverage": "vitest run --coverage"
   },
