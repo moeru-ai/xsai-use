@@ -7,6 +7,7 @@
   import ChatBubble from './message-bubble.svelte'
 
   let chat = $state(new Chat({}))
+  let inputElement: HTMLInputElement | null = null
 
   const handleSendButtonClick = (event: MouseEvent) => {
     if (chat.status === 'loading') {
@@ -85,6 +86,12 @@
 
     return () => {}
   }
+
+  $effect(() => {
+    if (chat.status === 'idle' && inputElement) {
+      inputElement.focus()
+    }
+  })
 </script>
 
 <main style='display: flex; justify-content: center; padding: 20px;' {@attach loadTools}>
@@ -128,6 +135,7 @@
           placeholder='say something...'
           style='width: 100%;'
           bind:value={chat.input}
+          bind:this={inputElement}
           disabled={chat.status !== 'idle'}
         />
         <button
