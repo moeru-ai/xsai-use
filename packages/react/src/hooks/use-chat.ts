@@ -90,7 +90,7 @@ export function useChat(options: UseChatOptions) {
             const latestMessages = uiMessagesRef.current
             const messages = [
               ...latestMessages.at(-1)?.role === 'assistant'
-                ? latestMessages.slice(0, latestMessages.length - 1)
+                ? latestMessages.slice(0, -1)
                 : latestMessages,
               clonedMessage,
             ]
@@ -207,8 +207,11 @@ export function useChat(options: UseChatOptions) {
         return
       }
 
+      const newMessages = latestMessages.slice(0, msgIdx + 1)
+      setInnerMessages(newMessages)
+
       await request({
-        messages: latestMessages.slice(0, msgIdx + 1),
+        messages: newMessages,
       })
     },
     [

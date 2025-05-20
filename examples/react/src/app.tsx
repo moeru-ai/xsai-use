@@ -147,7 +147,7 @@ function ChatMessage({
         message.role === 'user' && (
           <div className="chat-footer opacity-50">
             {/* eslint-disable-next-line ts/no-misused-promises,ts/promise-function-async */}
-            <a className="link" onClick={() => reload?.(message.id)}>reload from here</a>
+            <button type="button" className="link" onClick={() => reload?.(message.id)}>reload from here</button>
           </div>
         )
       }

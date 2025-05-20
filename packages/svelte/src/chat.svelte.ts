@@ -97,14 +97,9 @@ export class Chat {
           },
           onUpdate: (message) => {
             const clonedMessage = structuredClone(message)
-            const messages = this.messages
+            const latestMessages = untrack(() => this.messages)
 
-            if (messages.at(-1)?.role === 'assistant') {
-              this.messages = messages.slice(0, -1).concat(clonedMessage)
-            }
-            else {
-              this.messages = messages.concat(clonedMessage)
-            }
+            this.messages = (latestMessages.at(-1)?.role === 'assistant' ? latestMessages.slice(0, -1) : latestMessages).concat(clonedMessage)
           },
         },
       )
@@ -139,7 +134,7 @@ export class Chat {
     this.messages = this.messages.concat(userMessage)
 
     await this.#request({
-      messages: $state.snapshot(this.messages),
+      messages: untrack(() => $state.snapshot(this.messages)),
     })
   }
 
@@ -190,8 +185,11 @@ export class Chat {
       return
     }
 
+    const newMessages = untrack(() => this.messages.slice(0, msgIdx + 1))
+    this.messages = newMessages
+
     await this.#request({
-      messages: $state.snapshot(this.messages.slice(0, msgIdx + 1)),
+      messages: $state.snapshot(newMessages),
     })
   }
 

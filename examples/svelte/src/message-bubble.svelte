@@ -53,7 +53,7 @@
   </div>
   {#if message.role === 'user'}
     <div class='chat-footer opacity-50'>
-      <a href='javascript:void 0' class='link' onclick={() => reload?.(message.id)}>reload from here</a>
+      <button type='button' class='link' onclick={() => reload?.(message.id)}>reload from here</button>
     </div>
   {/if}
 </div>
