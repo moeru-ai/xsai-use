@@ -1,21 +1,12 @@
 <script lang='ts'>
+  import type { Attachment } from 'svelte/attachments'
   import { Chat } from '@xsai-use/svelte'
+  import { tool } from '@xsai/tool'
+  import { description, object, pipe, string } from 'valibot'
+
   import ChatBubble from './message-bubble.svelte'
 
-  const chat = new Chat({
-    id: 'simple-chat',
-    preventDefault: true,
-    initialMessages: [
-      {
-        role: 'system',
-        content: 'you are a helpful assistant.',
-      },
-    ],
-    baseURL: 'http://localhost:11434/v1/',
-    model: 'mistral-nemo-instruct-2407',
-    maxSteps: 3,
-    toolChoice: 'auto',
-  })
+  let chat = $state(new Chat({}))
 
   const handleSendButtonClick = (event: MouseEvent) => {
     if (chat.status === 'loading') {
@@ -26,21 +17,99 @@
     // Let the form submission handle this case
     }
   }
+
+  let isLoaded = $state(false)
+  const tools = []
+
+  const loadTools: Attachment = async () => {
+    try {
+      const weatherTool = await tool({
+        description: 'Get the weather in a location',
+        execute: async ({ location }) => {
+          await new Promise(resolve => setTimeout(resolve, 2000))
+          if (Math.random() > 0.5) {
+            throw new Error('Weather API error')
+          }
+          return {
+            location,
+            temperature: 10,
+          }
+        },
+        name: 'weather',
+        parameters: object({
+          location: pipe(
+            string(),
+            description('The location to get the weather for'),
+          ),
+        }),
+      })
+      tools.push('weather')
+
+      const calculatorTool = await tool({
+        description: 'Calculate mathematical expression',
+        execute: ({ expression }) => ({
+          // eslint-disable-next-line no-eval
+          result: eval(expression),
+        }),
+        name: 'calculator',
+        parameters: object({
+          expression: pipe(
+            string(),
+            description('The mathematical expression to calculate'),
+          ),
+        }),
+      })
+      tools.push('calculator')
+
+      chat = new Chat({
+        id: 'simple-chat',
+        preventDefault: true,
+        initialMessages: [
+          {
+            role: 'system',
+            content: 'you are a helpful assistant.',
+          },
+        ],
+        baseURL: 'http://localhost:11434/v1/',
+        model: 'mistral-nemo-instruct-2407',
+        maxSteps: 3,
+        toolChoice: 'auto',
+        tools: [weatherTool, calculatorTool],
+      })
+
+      isLoaded = true
+    }
+    catch (err) {
+      console.error('Error loading tools:', err)
+    }
+
+    return () => {}
+  }
 </script>
 
-<main style='display: flex; justify-content: center; padding: 20px;'>
-  <div class='chatContainer'>
-    <div class='chatHeader'>
+<main style='display: flex; justify-content: center; padding: 20px;' {@attach loadTools}>
+  <div class='useChat-container'>
+    <div class='useChat-header'>
       <h2>useChat</h2>
     </div>
 
-    <div class='chatToolsSection'>
-      <div class='toolsContainer'>
+    <div class='chat-tools-section'>
+      <div class='tools-container'>
         <span>Available tools:</span>
+        {#if isLoaded}
+          {#each tools as tool}
+            <div class='tool-badge'>
+              <span class='tool-icon'>🔧</span>
+              <span class='tool-name'>{tool}</span>
+            </div>
+          {/each}
+        {:else}
+          <span class='loading loading-infinity loading-md'></span>
+        {/if}
       </div>
     </div>
 
-    <div class='messagesContainer'>
+    <div class='messages-container'>
       {#each chat.messages as message, messageIndex (messageIndex)}
         <ChatBubble
           {message}
@@ -51,7 +120,7 @@
       {/each}
     </div>
 
-    <form on:submit={chat.handleSubmit} class='inputContainer'>
+    <form onsubmit={chat.handleSubmit} class='input-container'>
       <div class='join' style='width: 100%;'>
         <input
           type='text'
@@ -63,7 +132,7 @@
         />
         <button
           class='btn join-item'
-          on:click={handleSendButtonClick}
+          onclick={handleSendButtonClick}
           type={chat.status === 'loading' ? 'button' : 'submit'}
         >
           {#if chat.status === 'loading'}
@@ -74,7 +143,7 @@
         </button>
         <button
           class='btn join-item'
-          on:click={(e) => {
+          onclick={(e) => {
             e.preventDefault()
             chat.reset()
           }}
@@ -92,78 +161,78 @@
 </main>
 
 <style>
-  .chatHeader {
-    background-color: #f0f2f5;
-    border-bottom: 1px solid #ddd;
-    padding: 10px 15px;
-    text-align: center;
-  }
+.useChat-header {
+  background-color: #f0f2f5;
+  border-bottom: 1px solid #ddd;
+  padding: 10px 15px;
+  text-align: center;
+}
 
-  .chatContainer {
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    display: flex;
-    flex-direction: column;
-    font-family: Arial, sans-serif;
-    height: 90vh;
-    overflow: hidden;
-    width: 600px;
-  }
+.useChat-container {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  font-family: Arial, sans-serif;
+  height: 90vh;
+  overflow: hidden;
+  width: 600px;
+}
 
-  .inputContainer {
-    background-color: #f0f2f5;
-    border-top: 1px solid #ddd;
-    display: flex;
-    padding: 10px;
-    width: 100%;
-  }
+.input-container {
+  background-color: #f0f2f5;
+  border-top: 1px solid #ddd;
+  display: flex;
+  padding: 10px;
+  width: 100%;
+}
 
-  .messagesContainer {
-    display: flex;
-    flex: 1;
-    flex-direction: column;
-    gap: 10px;
-    overflow-y: auto;
-    padding: 15px;
-  }
+.messages-container {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 10px;
+  overflow-y: auto;
+  padding: 15px;
+}
 
-  .toolsContainer {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: flex-start;
-    gap: 8px;
-    min-height: 35px;
-  }
+.tools-container {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 8px;
+  min-height: 35px;
+}
 
-  .toolBadge {
-    background-color: #e9ecef;
-    border-radius: 16px;
-    padding: 6px 12px;
-    font-size: 13px;
-    color: #495057;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    border: 1px solid #dee2e6;
-  }
+.tool-badge {
+  background-color: #e9ecef;
+  border-radius: 16px;
+  padding: 6px 12px;
+  font-size: 13px;
+  color: #495057;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid #dee2e6;
+}
 
-  .toolIcon {
-    color: #495057;
-    font-size: 14px;
-  }
+.tool-icon {
+  color: #495057;
+  font-size: 14px;
+}
 
-  .toolName {
-    font-size: 13px;
-    color: #495057;
-  }
+.tool-name {
+  font-size: 13px;
+  color: #495057;
+}
 
-  .chatToolsSection {
-    padding: 10px;
-    align-content: center;
-    flex-shrink: 0;
-    border-bottom: 1px solid #ddd;
-    background-color: #f8f9fa;
-  }
+.chat-tools-section {
+  padding: 10px;
+  align-content: center;
+  flex-shrink: 0;
+  border-bottom: 1px solid #ddd;
+  background-color: #f8f9fa;
+}
 </style>

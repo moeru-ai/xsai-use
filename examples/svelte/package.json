@@ -1,6 +1,7 @@
 {
   "name": "@xsai-use/examples-svelte",
   "type": "module",
+  "version": "0.0.1",
   "private": true,
   "description": "when UI libs meet xsai",
   "author": "Moeru AI",
@@ -11,6 +12,8 @@
   },
   "dependencies": {
     "@xsai-use/svelte": "workspace:",
-    "svelte": "^5.0.0"
+    "@xsai/tool": "catalog:xsai",
+    "svelte": "^5.32.0",
+    "valibot": "catalog:valibot"
   }
 }
