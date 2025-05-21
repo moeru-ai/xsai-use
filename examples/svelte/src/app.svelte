@@ -4,7 +4,7 @@
   import { tool } from '@xsai/tool'
   import { description, object, pipe, string } from 'valibot'
 
-  import ChatBubble from './message-bubble.svelte'
+  import MessageBubble from './message-bubble.svelte'
 
   let chat = $state(new Chat({}))
   let inputElement: HTMLInputElement | null = null
@@ -118,7 +118,7 @@
 
     <div class='messages-container'>
       {#each chat.messages as message, messageIndex (messageIndex)}
-        <ChatBubble
+        <MessageBubble
           {message}
           isError={messageIndex === chat.messages.length - 1 && chat.status === 'error'}
           error={messageIndex === chat.messages.length - 1 ? chat.error : null}

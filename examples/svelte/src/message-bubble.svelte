@@ -72,40 +72,52 @@
   </div>
 {/snippet}
 
-<div
-  class={[
-    'chat',
-    message.role === 'user' ? 'chat-end' : 'chat-start',
-  ]}
->
+{#snippet renderMessageParts(message)}
+  {#each message.parts as part, index (index)}
+    {#if part.type === 'text'}
+      {@render UIMessageTextPart(part)}
+    {:else if part.type === 'tool-call'}
+      {@render UIMessageToolPart(part)}
+    {:else}
+      {@render UIMessageUnknownPart(part)}
+    {/if}
+  {/each}
+{/snippet}
+
+{#if message.role === 'system'}
+  <div class='flex justify-center'>
+    <div class='badge badge-xl badge-outline badge-primary'>
+      {@render renderMessageParts(message)}
+    </div>
+  </div>
+{:else}
   <div
     class={[
-      'chat-bubble',
-      message.role === 'user' ? 'chat-bubble-primary' : '',
+      'chat',
+      message.role === 'user' ? 'chat-end' : 'chat-start',
     ]}
   >
-    {#each message.parts as part, index (index)}
-      {#if part.type === 'text'}
-        {@render UIMessageTextPart(part)}
-      {:else if part.type === 'tool-call'}
-        {@render UIMessageToolPart(part)}
-      {:else}
-        {@render UIMessageUnknownPart(part)}
+    <div
+      class={[
+        'chat-bubble',
+        message.role === 'user' ? 'chat-bubble-primary' : '',
+      ]}
+    >
+      {@render renderMessageParts(message)}
+      {#if isError}
+        <div class='error-message'>
+          ❌
+          {error?.message}
+        </div>
       {/if}
-    {/each}
-    {#if isError}
-      <div class='error-message'>
-        ❌
-        {error?.message}
+    </div>
+    {#if message.role === 'user'}
+      <div class='chat-footer opacity-50'>
+        <button type='button' class='link' onclick={() => reload?.(message.id)}>reload from here</button>
       </div>
     {/if}
   </div>
-  {#if message.role === 'user'}
-    <div class='chat-footer opacity-50'>
-      <button type='button' class='link' onclick={() => reload?.(message.id)}>reload from here</button>
-    </div>
-  {/if}
-</div>
+{/if}
 
 <style>
 .chat-bubble {
