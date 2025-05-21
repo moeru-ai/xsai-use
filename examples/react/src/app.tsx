@@ -1,3 +1,4 @@
+import type { UIMessage } from '@xsai-use/react'
 import { useChat } from '@xsai-use/react'
 import { tool } from '@xsai/tool'
 
@@ -100,11 +101,38 @@ function ChatMessage({
   error,
   reload,
 }: {
-  message: ReturnType<typeof useChat>['messages'][number]
+  message: UIMessage
   isError?: boolean
   error?: Error | null
   reload?: (id: string) => void | Promise<void>
 }) {
+  const renderMessageParts = (message: UIMessage) => {
+    return message.parts.map((part, index) => {
+      switch (part.type) {
+        case 'text':
+          return <UIMessageTextPart key={index} text={part.text} />
+        case 'tool-call':
+          return <UIMessageToolPart key={part.toolCall.id} part={part} />
+        case 'audio':
+        case 'image':
+        case 'reasoning':
+        case 'refusal':
+        default:
+          return <UIMessageUnknownPart key={index} type={part.type} />
+      }
+    })
+  }
+
+  if (message.role === 'system') {
+    return (
+      <div className="flex justify-center">
+        <div className="badge badge-xl badge-outline badge-primary">
+          {renderMessageParts(message)}
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className={
       classNames(
@@ -122,20 +150,7 @@ function ChatMessage({
         }
         style={{ ...styles.chatBubble }}
       >
-        {message.parts.map((part, index) => {
-          switch (part.type) {
-            case 'text':
-              return <UIMessageTextPart key={index} text={part.text} />
-            case 'tool-call':
-              return <UIMessageToolPart key={part.toolCall.id} part={part} />
-            case 'audio':
-            case 'image':
-            case 'reasoning':
-            case 'refusal':
-            default:
-              return <UIMessageUnknownPart key={index} type={part.type} />
-          }
-        })}
+        {renderMessageParts(message)}
         {isError && (
           <div style={styles.errorMessage}>
             ❌
