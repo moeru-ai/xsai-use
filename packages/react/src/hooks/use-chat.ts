@@ -42,7 +42,7 @@ export function useChat(options: UseChatOptions) {
 
   const [status, setStatus] = useState<UseChatStatus>('idle')
   const setMessages = useCallback((messages: UIMessage[]) => {
-    if (status !== 'loading') {
+    if (status === 'loading') {
       return
     }
     setInnerMessages(messages)
@@ -63,9 +63,10 @@ export function useChat(options: UseChatOptions) {
     }) => {
       setStatus('loading')
       setError(null)
+      const abortController = new AbortController()
 
       try {
-        abortControllerRef.current = new AbortController()
+        abortControllerRef.current = abortController
 
         await callApi({
           ...stableStreamTextOptions,
@@ -85,6 +86,10 @@ export function useChat(options: UseChatOptions) {
             role: 'assistant',
           },
           onUpdate: (message) => {
+            if (abortController.signal.aborted) {
+              return
+            }
+
             const clonedMessage = structuredClone(message)
 
             const latestMessages = uiMessagesRef.current
@@ -101,6 +106,9 @@ export function useChat(options: UseChatOptions) {
         })
       }
       catch (error) {
+        if (abortController.signal.aborted) {
+          return
+        }
         setStatus('error')
         const actualError = error instanceof Error ? error : new Error(String(error))
         setError(actualError)
@@ -189,7 +197,7 @@ export function useChat(options: UseChatOptions) {
 
   const reload = useCallback(
     async (id?: string) => {
-      if (status !== 'idle') {
+      if (status === 'loading') {
         return
       }
       const latestMessages = uiMessagesRef.current

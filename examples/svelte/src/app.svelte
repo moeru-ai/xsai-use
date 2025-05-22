@@ -144,7 +144,7 @@
           type={chat.status === 'loading' ? 'button' : 'submit'}
         >
           {#if chat.status === 'loading'}
-            <span class='loading loading-dots loading-md'></span>
+            Stop
           {:else}
             Send
           {/if}

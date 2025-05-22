@@ -86,23 +86,13 @@
 
 {#if message.role === 'system'}
   <div class='flex justify-center'>
-    <div class='badge badge-xl badge-outline badge-primary'>
+    <div class='badge badge-ghost'>
       {@render renderMessageParts(message)}
     </div>
   </div>
 {:else}
-  <div
-    class={[
-      'chat',
-      message.role === 'user' ? 'chat-end' : 'chat-start',
-    ]}
-  >
-    <div
-      class={[
-        'chat-bubble',
-        message.role === 'user' ? 'chat-bubble-primary' : '',
-      ]}
-    >
+  <div class="chat {message.role === 'user' ? 'chat-end' : 'chat-start'}">
+    <div class="chat-bubble {message.role === 'user' ? 'chat-bubble-primary' : ''}">
       {@render renderMessageParts(message)}
       {#if isError}
         <div class='error-message'>

@@ -72,8 +72,10 @@ export class Chat {
     this.#status = 'loading'
     this.#error = null
 
+    const abortController = new AbortController()
+
     try {
-      this.#abortController = new AbortController()
+      this.#abortController = abortController
 
       await callApi(
         {
@@ -96,6 +98,10 @@ export class Chat {
             role: 'assistant',
           },
           onUpdate: (message) => {
+            if (abortController.signal.aborted) {
+              return
+            }
+
             const clonedMessage = structuredClone(message)
             const latestMessages = untrack(() => this.messages)
 
@@ -105,6 +111,9 @@ export class Chat {
       )
     }
     catch (err) {
+      if (abortController.signal.aborted) {
+        return
+      }
       this.#status = 'error'
       const actualError = err instanceof Error ? err : new Error(String(err))
       this.#error = actualError
@@ -168,7 +177,7 @@ export class Chat {
   }
 
   reload = async (id?: string) => {
-    if (this.#status !== 'idle') {
+    if (this.#status === 'loading') {
       return
     }
 

@@ -126,7 +126,7 @@ function ChatMessage({
   if (message.role === 'system') {
     return (
       <div className="flex justify-center">
-        <div className="badge badge-xl badge-outline badge-primary">
+        <div className="badge badge-ghost">
           {renderMessageParts(message)}
         </div>
       </div>
@@ -335,7 +335,7 @@ export function ChatComponent() {
             type={status === 'loading' ? 'button' : 'submit'}
           >
             {status === 'loading'
-              ? <span className="loading loading-dots loading-md"></span>
+              ? 'Stop'
               : 'Send'}
           </button>
           <button
