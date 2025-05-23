@@ -1,0 +1,11 @@
+{
+  "extends": [
+    "@importantimport/tsconfig/app.json",
+    "@importantimport/tsconfig/parts/jsx-react.json"
+  ],
+  "include": [
+    "examples/react/src",
+    "packages/react/src",
+    "packages/react/test"
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  // https://github.com/vitejs/vite/blob/main/packages/create-vite/template-svelte-ts/tsconfig.app.json
+  "extends": "@tsconfig/svelte/tsconfig.json",
+  "compilerOptions": {
+    "target": "ESNext",
+    "moduleDetection": "force",
+    "useDefineForClassFields": true,
+    "module": "ESNext",
+    "resolveJsonModule": true,
+    "allowSyntheticDefaultImports": true,
+    "isolatedModules": true
+  },
+  "include": [
+    "examples/svelte/src",
+    "packages/svelte/src",
+    "packages/svelte/test"
+  ]
+}

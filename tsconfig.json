@@ -1,0 +1,9 @@
+{
+  "references": [
+    { "path": "./tsconfig.lib.json" },
+    { "path": "./tsconfig.node.json" },
+    { "path": "./tsconfig.react.json" },
+    { "path": "./tsconfig.svelte.json" }
+  ],
+  "files": []
+}
