@@ -1,96 +1,113 @@
 # @xsai-use/svelte
 
-Svelte components and utilities for working with AI models. Built on top of the @xsai-use/shared package.
+Svelte bindings for xsAI.
+
+This package provides a collection of Svelte stores and components for building interactive web applications with powerful features and minimal boilerplate.
 
 ## Installation
 
 ```bash
 npm install @xsai-use/svelte
+# or
+yarn add @xsai-use/svelte
+# or
+pnpm add @xsai-use/svelte
 ```
+
+## Classes
+
+- `Chat`: A powerful class for building chat interfaces with AI models
+
+### Chat
+
+__constructor parameters__
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| id | string | Unique identifier for the chat |
+| generateID? | () => string | Function to generate unique IDs for messages |
+| initialMessages? | Message[] | Initial messages to populate the chat |
+| onFinish? | () => void | Callback when the chat response completes |
+| preventDefault? | boolean | Whether to prevent default form submission |
+
+__properties and methods__
+
+| Property/Method | Type | Description |
+|----------|------|-------------|
+| error | Error \| null | Error object if an error occurred |
+| handleSubmit | (e: SubmitEvent) => Promise<void> | Handles form submission |
+| input | string | Current input value |
+| messages | UIMessage[] | Array of messages in the conversation |
+| status | 'idle' \| 'loading' \| 'error' | Current status of the chat |
+| reload | (id?: string) => Promise<void> | Reloads the last chat response |
+| reset | () => void | Resets the chat to initial state |
+| stop | () => void | Stops the current response generation |
+| submitMessage | (message: InputMessage) => Promise<void> | Submits a message programmatically |
 
 ## Usage
 
-### Basic Chat Example
+More examples in [examples](https://github.com/moeru-ai/xsai-use/examples/svelte)
+
+### Chat
 
 ```svelte
 <script>
-  import { useChat } from '@xsai-use/svelte'
+  import { Chat } from '@xsai-use/svelte'
 
-  const { messages, isLoading, input } = useChat({
-    apiKey: 'your-api-key',
-  })
-
-  let message = ''
-
-  function handleSubmit() {
-    input(message)
-    message = ''
-  }
+  const chat = $state(new Chat({
+    id: 'simple-chat',
+    preventDefault: true,
+    initialMessages: [
+      {
+        role: 'system',
+        content: 'you are a helpful assistant.',
+      },
+    ],
+    baseURL: 'http://localhost:11434/v1/',
+    model: 'mistral-nemo-instruct-2407',
+    maxSteps: 3,
+    toolChoice: 'auto',
+  }))
 </script>
 
 <div>
-  {#each $messages as message}
-    <div class={message.role}>
-      {message.content}
+  {#each chat.messages as message, messageIndex (messageIndex)}
+    <div>
+      <div>{message.role}</div>
+      <div>{message.content}</div>
+      {#if messageIndex === chat.messages.length - 1 && chat.status === 'error'}
+        <button on:click={() => chat.reload()}>Reload</button>
+      {/if}
     </div>
   {/each}
 
-  <form on:submit|preventDefault={handleSubmit}>
-    <input bind:value={message} />
-    <button type='submit' disabled={$isLoading}>Send</button>
+  <form onsubmit={chat.handleSubmit}>
+    <input
+      type='text'
+      placeholder='say something...'
+      style='width: 100%;'
+      bind:value={chat.input}
+      disabled={chat.status !== 'idle'}
+    />
+    <button
+      type={chat.status === 'loading' ? 'button' : 'submit'}
+      on:click={(e) => {
+        if (chat.status === 'loading') {
+          e.preventDefault()
+          chat.stop()
+        }
+      }}
+    >
+      {chat.status === 'loading' ? 'Stop' : 'Send'}
+    </button>
+    <button
+      type='button'
+      on:click={() => chat.reset()}
+    >
+      Reset
+    </button>
   </form>
 </div>
-```
-
-### Complete Example
-
-Check out the `ChatComponent.svelte` component for a complete example with error handling, message streaming indicators, and more.
-
-## API Reference
-
-### useChat / createChat
-
-```typescript
-const {
-  messages, // Readable<Message[]> - The conversation history
-  isLoading, // Readable<boolean> - Whether a request is in progress
-  error, // Readable<Error | undefined> - Any error that occurred
-  streamData, // Readable<Record<string, any> | undefined> - Streaming data
-  input, // (input: string, options?: ChatRequest) => Promise<any> - Send a message
-  stop, // () => void - Stop the current request
-  reload, // () => Promise<any> - Reload the last response
-  fetchChat, // (input: string, options?: FetchChatOptions) => Promise<any> - Non-streaming request
-  prefetchChat, // (input: string, options?: PrefetchChatOptions) => Promise<void> - Prefetch request
-  reset, // () => void - Reset the conversation
-  setMessages, // (messages: Message[]) => void - Set messages directly
-} = useChat({
-  initialMessages, // Initial messages to populate the chat
-  apiKey, // API key for authentication
-  // ... other options
-})
-```
-
-## Using with SvelteKit
-
-For SvelteKit applications, you may want to initialize the chat on the client side only:
-
-```svelte
-<script>
-  import { browser } from '$app/environment'
-  import { useChat } from '@xsai-use/svelte'
-
-  let chatInstance
-
-  if (browser) {
-    chatInstance = useChat({
-      apiKey: 'your-api-key',
-    })
-  }
-</script>
-
-{#if browser && chatInstance}
-  <!-- Chat UI -->
-{/if}
 ```
 
 ## License
