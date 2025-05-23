@@ -23,5 +23,6 @@
   ],
   "[svelte]": {
     "editor.defaultFormatter": "svelte.svelte-vscode"
-  }
+  },
+  "vitest.maximumConfigs": 10
 }
