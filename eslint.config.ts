@@ -7,6 +7,12 @@ export default antfu(
     svelte: true,
     typescript: { tsconfigPath: './tsconfig.json' },
   },
+  {
+    ignores: [
+      'cspell.config.yaml',
+      'cspell.config.yml',
+    ],
+  },
   // {
   //   ...await svelte({ typescript: true }),
   //   files: ['**/*.svelte.ts', '**/*.svelte.js'],
