@@ -34,7 +34,7 @@
     "types": "./dist/index.d.ts"
   },
   "scripts": {
-    "build": "pkgroll",
+    "build": "echo not implemented yet",
     "test": "vitest run",
     "coverage": "vitest run --coverage"
   },

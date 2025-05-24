@@ -110,6 +110,8 @@ function ChatMessage({
     return message.parts.map((part, index) => {
       switch (part.type) {
         case 'text':
+          // use index here for simplicity, but in production code, you might want to use a unique identifier
+          // eslint-disable-next-line react/no-array-index-key
           return <UIMessageTextPart key={index} text={part.text} />
         case 'tool-call':
           return <UIMessageToolPart key={part.toolCall.id} part={part} />
@@ -118,6 +120,8 @@ function ChatMessage({
         case 'reasoning':
         case 'refusal':
         default:
+          // use index here for simplicity, but in production code, you might want to use a unique identifier
+          // eslint-disable-next-line react/no-array-index-key
           return <UIMessageUnknownPart key={index} type={part.type} />
       }
     })
@@ -180,11 +184,15 @@ export function ChatComponent() {
   useEffect(() => {
     const loadTools = async () => {
       setIsLoadingTools(true)
+      // manually delay loading tools to simulate network delay
+      // eslint-disable-next-line react-web-api/no-leaked-timeout
       await new Promise(resolve => setTimeout(resolve, 1000))
       try {
         const weatherTool = await tool({
           description: 'Get the weather in a location',
           execute: async ({ location }) => {
+            // manually delay loading tools to simulate network delay
+            // eslint-disable-next-line react-web-api/no-leaked-timeout
             await new Promise(resolve => setTimeout(resolve, 2000))
             if (Math.random() > 0.5) {
               throw new Error('Weather API error')
