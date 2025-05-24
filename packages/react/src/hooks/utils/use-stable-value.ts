@@ -12,6 +12,8 @@ export function useStableValue<T>(latestValue: T): T {
 
   useEffect(() => {
     if (!isDeepEqualData(latestValue, value)) {
+      // trigger re-render on purpose
+      // eslint-disable-next-line react-hooks-extra/no-direct-set-state-in-use-effect
       setValue(latestValue)
     }
   }, [latestValue, value])

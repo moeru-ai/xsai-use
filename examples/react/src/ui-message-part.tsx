@@ -57,19 +57,19 @@ export function UIMessageToolPart({ part }: { part: UIMessageToolCallPart }) {
             {result.map((item, index) => {
               if (item.type === 'text') {
                 return (
-                  <div key={index}>
+                  <div key={`${item.type + index}`}>
                     {String(item)}
                   </div>
                 )
               }
               if (item.type === 'image_url') {
                 return (
-                  <img key={index} src={String(item.image_url)} alt="Tool Result" style={{ maxWidth: '100%', borderRadius: '4px' }} />
+                  <img key={`${item.type + index}`} src={String(item.image_url)} alt="Tool Result" style={{ maxWidth: '100%', borderRadius: '4px' }} />
                 )
               }
               if (item.type === 'input_audio') {
                 return (
-                  <audio key={index} controls>
+                  <audio key={`${item.type + index}`} controls>
                     <source src={item.input_audio.data} type={`audio/${item.input_audio.format}`} />
                     Your browser does not support the audio element.
                   </audio>
