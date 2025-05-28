@@ -16,7 +16,7 @@ pnpm add @xsai-use/svelte
 
 ## Classes
 
-- `Chat`: A powerful class for building chat interfaces with AI models
+- `Chat`: class for building chat interfaces with xsAI
 
 ### Chat
 
@@ -63,10 +63,9 @@ More examples in [examples](https://github.com/moeru-ai/xsai-use/examples/svelte
         content: 'you are a helpful assistant.',
       },
     ],
-    baseURL: 'http://localhost:11434/v1/',
-    model: 'mistral-nemo-instruct-2407',
+    baseURL: 'http://url.to.your.ai/v1/',
+    model: 'openai-compatible-model',
     maxSteps: 3,
-    toolChoice: 'auto',
   }))
 </script>
 
@@ -76,7 +75,7 @@ More examples in [examples](https://github.com/moeru-ai/xsai-use/examples/svelte
       <div>{message.role}</div>
       <div>{message.content}</div>
       {#if messageIndex === chat.messages.length - 1 && chat.status === 'error'}
-        <button on:click={() => chat.reload()}>Reload</button>
+        <button onclick={() => chat.reload()}>Reload</button>
       {/if}
     </div>
   {/each}
@@ -91,7 +90,7 @@ More examples in [examples](https://github.com/moeru-ai/xsai-use/examples/svelte
     />
     <button
       type={chat.status === 'loading' ? 'button' : 'submit'}
-      on:click={(e) => {
+      onclick={(e) => {
         if (chat.status === 'loading') {
           e.preventDefault()
           chat.stop()
@@ -102,7 +101,7 @@ More examples in [examples](https://github.com/moeru-ai/xsai-use/examples/svelte
     </button>
     <button
       type='button'
-      on:click={() => chat.reset()}
+      onclick={() => chat.reset()}
     >
       Reset
     </button>

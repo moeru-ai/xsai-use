@@ -16,7 +16,7 @@ pnpm add @xsai-use/svelte
 
 ## 类
 
-- `Chat`: 用于构建 AI 聊天界面的强大类
+- `Chat`: 用于构建 AI 聊天界面的类
 
 ### Chat
 
@@ -63,10 +63,9 @@ __属性和方法__
         content: 'you are a helpful assistant.',
       },
     ],
-    baseURL: 'http://localhost:11434/v1/',
-    model: 'mistral-nemo-instruct-2407',
+    baseURL: 'http://url.to.your.ai/v1/',
+    model: 'openai-compatible-model',
     maxSteps: 3,
-    toolChoice: 'auto',
   }))
 </script>
 

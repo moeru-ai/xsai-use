@@ -79,7 +79,6 @@ export function ChatComponent() {
     baseURL: 'http://url.to.your.ai/v1/',
     model: 'openai-compatible-model',
     maxSteps: 3,
-    toolChoice: 'auto',
   })
 
   return (

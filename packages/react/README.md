@@ -76,10 +76,9 @@ export function ChatComponent() {
         content: 'you are a helpful assistant.',
       },
     ],
-    baseURL: 'http://localhost:11434/v1/',
-    model: 'mistral-nemo-instruct-2407',
+    baseURL: 'http://url.to.your.ai/v1/',
+    model: 'openai-compatible-model',
     maxSteps: 3,
-    toolChoice: 'auto',
   })
 
   return (
