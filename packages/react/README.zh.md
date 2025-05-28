@@ -2,7 +2,7 @@
 
 xsAI 的 React 绑定。
 
-该包提供了一系列 React hooks，用于构建具有强大功能且最小化样板代码的交互式 Web 应用程序。
+本包为构建交互式 Web 应用程序提供了一系列 React hooks，具有强大的功能和最少的样板代码。
 
 ## 安装
 
@@ -16,27 +16,27 @@ pnpm add @xsai-use/react
 
 ## Hooks
 
-- `useChat`: 用于构建 AI 聊天界面的强大 hook
+- `useChat`: 用于构建 AI 聊天界面的 hook
 
 ### useChat
 
 __参数__
 
 | 参数 | 类型 | 描述 |
-|-----|------|------|
+|-----------|------|-------------|
 | id | string | 聊天的唯一标识符 |
-| generateID? | () => string | 生成消息唯一ID的函数 |
-| initialMessages? | Message[] | 初始化聊天的消息列表 |
-| onFinish? | () => void | 聊天响应完成时的回调函数 |
-| preventDefault? | boolean | 是否阻止默认表单提交行为 |
+| generateID? | () => string | 为消息生成唯一 ID 的函数 |
+| initialMessages? | Message[] | 用于填充聊天的初始消息 |
+| onFinish? | () => void | 聊天响应完成时的回调 |
+| preventDefault? | boolean | 是否阻止默认表单提交 |
 
 __返回值__
 
 | 属性 | 类型 | 描述 |
-|-----|------|------|
-| error | Error \| null | 发生错误时的错误对象 |
-| handleInputChange | (e: React.ChangeEvent<HTMLInputElement \| HTMLTextAreaElement>) => void | 处理输入变化的函数 |
-| handleSubmit | (e?: React.FormEvent<HTMLFormElement>) => Promise<void> | 处理表单提交的函数 |
+|----------|------|-------------|
+| error | Error \| null | 如果发生错误，则为错误对象 |
+| handleInputChange | (e: React.ChangeEvent<HTMLInputElement \| HTMLTextAreaElement>) => void | 处理输入变化 |
+| handleSubmit | (e?: React.FormEvent<HTMLFormElement>) => Promise<void> | 处理表单提交 |
 | input | string | 当前输入值 |
 | messages | UIMessage[] | 对话中的消息数组 |
 | setMessages | (messages: UIMessage[]) => void | 手动设置消息的函数 |
@@ -47,9 +47,9 @@ __返回值__
 | stop | () => void | 停止当前响应生成 |
 | submitMessage | (message: InputMessage) => Promise<void> | 以编程方式提交消息 |
 
-## 使用
+## 使用方法
 
-更多示例请查看 [examples](https://github.com/moeru-ai/xsai-use/examples/react)
+更多示例请参见 [examples](https://github.com/moeru-ai/xsai-use/examples/react)
 
 ### useChat
 
@@ -76,8 +76,8 @@ export function ChatComponent() {
         content: 'you are a helpful assistant.',
       },
     ],
-    baseURL: 'http://localhost:11434/v1/',
-    model: 'mistral-nemo-instruct-2407',
+    baseURL: 'http://url.to.your.ai/v1/',
+    model: 'openai-compatible-model',
     maxSteps: 3,
     toolChoice: 'auto',
   })
@@ -95,14 +95,17 @@ export function ChatComponent() {
             />
           )
         : 'null')}
-      <input
-        type="text"
-        placeholder="说点什么..."
-        style={{ width: '100%' }}
-        onChange={handleInputChange}
-        value={input}
-        disabled={status !== 'idle'}
-      />
+      <form onSubmit={handleSubmit}>
+        <input
+          type="text"
+          placeholder="说点什么..."
+          onChange={handleInputChange}
+          value={input}
+          disabled={status !== 'idle'}
+        />
+        <button type="submit">发送</button>
+        <button type="button" onClick={reset}>重置</button>
+      </form>
     </div>
   )
 }

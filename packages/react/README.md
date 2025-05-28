@@ -16,7 +16,7 @@ pnpm add @xsai-use/react
 
 ## Hooks
 
-- `useChat`: A powerful hook for building chat interfaces with AI models
+- `useChat`: hook for building chat interfaces with xsAI
 
 ### useChat
 
@@ -95,14 +95,17 @@ export function ChatComponent() {
             />
           )
         : 'null')}
-      <input
-        type="text"
-        placeholder="say something..."
-        style={{ width: '100%' }}
-        onChange={handleInputChange}
-        value={input}
-        disabled={status !== 'idle'}
-      />
+      <form onSubmit={handleSubmit}>
+        <input
+          type="text"
+          placeholder="say something..."
+          onChange={handleInputChange}
+          value={input}
+          disabled={status !== 'idle'}
+        />
+        <button type="submit">Send</button>
+        <button type="button" onClick={reset}>Reset</button>
+      </form>
     </div>
   )
 }
