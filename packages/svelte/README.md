@@ -63,7 +63,7 @@ More examples in [examples](https://github.com/moeru-ai/xsai-use/examples/svelte
         content: 'you are a helpful assistant.',
       },
     ],
-    baseURL: 'http://url.to.your.ai/v1/',
+    baseURL: 'https://your-ai-provider.com/api/v1',
     model: 'openai-compatible-model',
     maxSteps: 3,
   }))
