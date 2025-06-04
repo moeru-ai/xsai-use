@@ -16,7 +16,7 @@ pnpm add @xsai-use/svelte
 
 ## Classes
 
-- `Chat`: class for building chat interfaces with xsAI
+- `Chat`: class for building chat interfaces
 
 ### Chat
 

@@ -16,7 +16,7 @@ pnpm add @xsai-use/react
 
 ## Hooks
 
-- `useChat`: hook for building chat interfaces with xsAI
+- `useChat`: hook for building chat interfaces
 
 ### useChat
 
