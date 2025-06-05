@@ -93,7 +93,7 @@ export function ChatComponent() {
               reload={reload}
             />
           )
-        : 'null')}
+        : null)}
       <form onSubmit={handleSubmit}>
         <input
           type="text"
