@@ -76,7 +76,7 @@ export function ChatComponent() {
         content: 'you are a helpful assistant.',
       },
     ],
-    baseURL: 'https://your-ai-provider.com/api/v1',
+    baseURL: 'https://api.openai.com/v1/',
     model: 'openai-compatible-model',
     maxSteps: 3,
   })
