@@ -52,7 +52,7 @@ export function ChatComponent() {
       },
     ],
     baseURL: 'https://api.openai.com/v1/',
-    model: 'openai-compatible-model',
+    model: 'gpt-4.1',
     maxSteps: 3,
   })
 
