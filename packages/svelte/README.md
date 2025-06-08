@@ -64,7 +64,7 @@ More examples in [examples](https://github.com/moeru-ai/xsai-use/examples/svelte
       },
     ],
     baseURL: 'https://api.openai.com/v1/',
-    model: 'openai-compatible-model',
+    model: 'gpt-4.1',
     maxSteps: 3,
   }))
 </script>
