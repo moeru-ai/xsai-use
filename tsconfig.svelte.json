@@ -7,11 +7,9 @@
     "useDefineForClassFields": true,
     "module": "ESNext",
     "resolveJsonModule": true,
-    "allowSyntheticDefaultImports": true,
     "isolatedModules": true
   },
   "include": [
-    "examples/svelte/src",
     "packages/svelte/src",
     "packages/svelte/test"
   ]
