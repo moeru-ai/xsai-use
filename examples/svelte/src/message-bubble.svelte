@@ -1,5 +1,13 @@
 <script lang='ts'>
-  const { message, error, isError, reload } = $props()
+  import type { Chat, UIMessageToolCallPart } from '@xsai-use/svelte'
+
+  interface Props {
+    message: Chat['message']
+    error: Chat['error']
+    isError: Chat['isError']
+    reload: Chat['reload']
+  }
+  const { message, error, isError, reload }: Props = $props()
 </script>
 
 {#snippet UIMessageTextPart(part)}
@@ -8,7 +16,7 @@
   </div>
 {/snippet}
 
-{#snippet UIMessageToolResult(part)}
+{#snippet UIMessageToolResult(part: UIMessageToolCallPart)}
   {#if part.status === 'error' && part.error}
     <pre>
       {String(part.error)}
@@ -29,7 +37,7 @@
               <div>{item.text}</div>
             {/if}
             {#if item.type === 'image_url'}
-              <img src={item.image_url} alt='Tool Result' style='max-width: 100%; border-radius: 4px;' />
+              <img src={item.image_url.url} alt='Tool Result' style='max-width: 100%; border-radius: 4px;' />
             {/if}
             {#if item.type === 'input_audio'}
               <audio controls>
