@@ -1,16 +1,16 @@
 <script lang='ts'>
-  import type { Chat, UIMessageToolCallPart } from '@xsai-use/svelte'
+  import type { Chat, UIMessage, UIMessageTextPart, UIMessageToolCallPart } from '@xsai-use/svelte'
 
   interface Props {
-    message: Chat['message']
+    message: UIMessage
     error: Chat['error']
-    isError: Chat['isError']
+    isError: boolean
     reload: Chat['reload']
   }
   const { message, error, isError, reload }: Props = $props()
 </script>
 
-{#snippet UIMessageTextPart(part)}
+{#snippet UIMessageTextPart(part: UIMessageTextPart)}
   <div>
     {part.text}
   </div>
@@ -53,7 +53,7 @@
 
 {/snippet}
 
-{#snippet UIMessageToolPart(part)}
+{#snippet UIMessageToolPart(part: UIMessageToolCallPart)}
   {@const hasResult = part.status === 'complete' || part.status === 'error'}
   {@const isLoading = part.status === 'loading' || part.status === 'partial'}
   <div
@@ -74,13 +74,13 @@
   </div>
 {/snippet}
 
-{#snippet UIMessageUnknownPart(part)}
+{#snippet UIMessageUnknownPart(part: any)}
   <div>
-    Unknown message part type: {part.type}
+    Unknown message part type: {part?.type}
   </div>
 {/snippet}
 
-{#snippet renderMessageParts(message)}
+{#snippet renderMessageParts(message: UIMessage)}
   {#each message.parts as part, index (index)}
     {#if part.type === 'text'}
       {@render UIMessageTextPart(part)}

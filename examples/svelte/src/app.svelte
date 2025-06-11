@@ -2,8 +2,8 @@
   import type { Attachment } from 'svelte/attachments'
   import { Chat } from '@xsai-use/svelte'
   import { tool } from '@xsai/tool'
-  import { description, object, pipe, string } from 'valibot'
 
+  import { description, object, pipe, string } from 'valibot'
   import MessageBubble from './message-bubble.svelte'
 
   let chat = $state(new Chat({}))
@@ -20,9 +20,9 @@
   }
 
   let isLoaded = $state(false)
-  const tools = []
+  const tools: string[] = []
 
-  const loadTools: Attachment = async () => {
+  const loadTools = async () => {
     try {
       const weatherTool = await tool({
         description: 'Get the weather in a location',
@@ -87,6 +87,10 @@
     return () => {}
   }
 
+  const attach: Attachment = () => {
+    loadTools()
+  }
+
   $effect(() => {
     if (chat.status === 'idle' && inputElement) {
       inputElement.focus()
@@ -94,7 +98,7 @@
   })
 </script>
 
-<main style='display: flex; justify-content: center; padding: 20px;' {@attach loadTools}>
+<main style='display: flex; justify-content: center; padding: 20px;' {@attach attach}>
   <div class='useChat-container'>
     <div class='useChat-header'>
       <h2>useChat</h2>
@@ -121,7 +125,7 @@
         <MessageBubble
           {message}
           isError={messageIndex === chat.messages.length - 1 && chat.status === 'error'}
-          error={messageIndex === chat.messages.length - 1 ? chat.error : null}
+          error={messageIndex === chat.messages.length - 1 ? chat.error : undefined}
           reload={chat.reload}
         />
       {/each}
