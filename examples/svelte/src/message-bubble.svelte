@@ -26,10 +26,10 @@
         {#each result as item}
           <li>
             {#if item.type === 'text'}
-              <div>{String(item)}</div>
+              <div>{item.text}</div>
             {/if}
             {#if item.type === 'image_url'}
-              <img src={String(item.image_url)} alt='Tool Result' style='max-width: 100%; border-radius: 4px;' />
+              <img src={item.image_url} alt='Tool Result' style='max-width: 100%; border-radius: 4px;' />
             {/if}
             {#if item.type === 'input_audio'}
               <audio controls>
