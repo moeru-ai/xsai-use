@@ -11,7 +11,6 @@
     "isolatedModules": true
   },
   "include": [
-    "examples/svelte/src",
     "packages/svelte/src",
     "packages/svelte/test"
   ]

@@ -1,14 +1,22 @@
 <script lang='ts'>
-  const { message, error, isError, reload } = $props()
+  import type { Chat, UIMessage, UIMessageTextPart, UIMessageToolCallPart } from '@xsai-use/svelte'
+
+  interface Props {
+    message: UIMessage
+    error: Chat['error']
+    isError: boolean
+    reload: Chat['reload']
+  }
+  const { message, error, isError, reload }: Props = $props()
 </script>
 
-{#snippet UIMessageTextPart(part)}
+{#snippet UIMessageTextPart(part: UIMessageTextPart)}
   <div>
     {part.text}
   </div>
 {/snippet}
 
-{#snippet UIMessageToolResult(part)}
+{#snippet UIMessageToolResult(part: UIMessageToolCallPart)}
   {#if part.status === 'error' && part.error}
     <pre>
       {String(part.error)}
@@ -26,10 +34,10 @@
         {#each result as item}
           <li>
             {#if item.type === 'text'}
-              <div>{String(item)}</div>
+              <div>{item.text}</div>
             {/if}
             {#if item.type === 'image_url'}
-              <img src={String(item.image_url)} alt='Tool Result' style='max-width: 100%; border-radius: 4px;' />
+              <img src={item.image_url.url} alt='Tool Result' style='max-width: 100%; border-radius: 4px;' />
             {/if}
             {#if item.type === 'input_audio'}
               <audio controls>
@@ -45,7 +53,7 @@
 
 {/snippet}
 
-{#snippet UIMessageToolPart(part)}
+{#snippet UIMessageToolPart(part: UIMessageToolCallPart)}
   {@const hasResult = part.status === 'complete' || part.status === 'error'}
   {@const isLoading = part.status === 'loading' || part.status === 'partial'}
   <div
@@ -66,13 +74,13 @@
   </div>
 {/snippet}
 
-{#snippet UIMessageUnknownPart(part)}
+{#snippet UIMessageUnknownPart(part: any)}
   <div>
-    Unknown message part type: {part.type}
+    Unknown message part type: {part?.type}
   </div>
 {/snippet}
 
-{#snippet renderMessageParts(message)}
+{#snippet renderMessageParts(message: UIMessage)}
   {#each message.parts as part, index (index)}
     {#if part.type === 'text'}
       {@render UIMessageTextPart(part)}

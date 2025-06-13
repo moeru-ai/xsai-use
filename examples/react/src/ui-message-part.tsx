@@ -58,13 +58,13 @@ export function UIMessageToolPart({ part }: { part: UIMessageToolCallPart }) {
               if (item.type === 'text') {
                 return (
                   <div key={`${item.type + index}`}>
-                    {String(item)}
+                    {item.text}
                   </div>
                 )
               }
               if (item.type === 'image_url') {
                 return (
-                  <img key={`${item.type + index}`} src={String(item.image_url)} alt="Tool Result" style={{ maxWidth: '100%', borderRadius: '4px' }} />
+                  <img key={`${item.type + index}`} src={item.image_url.url} alt="Tool Result" style={{ maxWidth: '100%', borderRadius: '4px' }} />
                 )
               }
               if (item.type === 'input_audio') {

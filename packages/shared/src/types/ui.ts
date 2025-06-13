@@ -15,13 +15,13 @@ export interface UIMessageImagePart {
   url: ImageURLorBase64
 }
 
-export type UIMessagePart =
-  | UIMessageAudioPart
-  | UIMessageImagePart
-  | UIMessageReasoningPart
-  | UIMessageRefusalPart
-  | UIMessageTextPart
-  | UIMessageToolCallPart
+export type UIMessagePart
+  = | UIMessageAudioPart
+    | UIMessageImagePart
+    | UIMessageReasoningPart
+    | UIMessageRefusalPart
+    | UIMessageTextPart
+    | UIMessageToolCallPart
 
 export interface UIMessageReasoningPart {
   reasoning: string

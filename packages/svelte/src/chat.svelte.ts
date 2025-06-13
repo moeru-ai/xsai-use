@@ -25,7 +25,7 @@ export class Chat {
 
   readonly #streamTextOptions: Record<string, unknown>
 
-  #error = $state<Error | null>(null)
+  #error = $state<Error>()
   get error() {
     return this.#error
   }
@@ -46,7 +46,7 @@ export class Chat {
 
   input = $state<string>('')
 
-  #abortController: AbortController | null = null
+  #abortController: AbortController | undefined
 
   constructor(options: UseChatOptions) {
     this.#options = options
@@ -70,7 +70,7 @@ export class Chat {
     messages: UIMessage[]
   }) => {
     this.#status = 'loading'
-    this.#error = null
+    this.#error = undefined
 
     const abortController = new AbortController()
 
@@ -86,7 +86,7 @@ export class Chat {
 
             // eslint-disable-next-line ts/no-floating-promises
             this.#onFinish?.()
-            this.#abortController = null
+            this.#abortController = undefined
           },
           signal: this.#abortController.signal,
         },
@@ -117,7 +117,7 @@ export class Chat {
       this.#status = 'error'
       const actualError = err instanceof Error ? err : new Error(String(err))
       this.#error = actualError
-      this.#abortController = null
+      this.#abortController = undefined
     }
   }
 
@@ -171,7 +171,7 @@ export class Chat {
   stop = () => {
     if (this.#abortController) {
       this.#abortController.abort()
-      this.#abortController = null
+      this.#abortController = undefined
       this.#status = 'idle'
     }
   }
@@ -206,7 +206,7 @@ export class Chat {
     this.stop()
     this.messages = this.#initialUIMessages
     this.input = ''
-    this.#error = null
+    this.#error = undefined
     this.#status = 'idle'
   }
 }
