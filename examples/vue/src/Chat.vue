@@ -35,7 +35,7 @@ onMounted(async () => {
       description: 'Get the weather in a location',
       execute: async ({ location }) => {
         // manually delay loading tools to simulate network delay
-        await new Promise(resolve => setTimeout(resolve, 2000))
+        await new Promise(resolve => setTimeout(resolve, 1000))
         if (Math.random() > 0.5) {
           throw new Error('Weather API error')
         }

@@ -33,7 +33,7 @@ export function useChat(options: UseChatOptions) {
   const input = ref('')
   const error = ref<Error>()
 
-  let abortController: AbortController | null = null
+  let abortController: AbortController | undefined
 
   const initialUIMessagesR = computed(() => initialUIMessages)
   watch(initialUIMessagesR, (newInitialMessages) => {
@@ -54,7 +54,7 @@ export function useChat(options: UseChatOptions) {
         messages: requestMessages,
         onFinish: () => {
           status.value = 'idle'
-          abortController = null
+          abortController = undefined
           void options.onFinish?.()
         },
         signal: abortController.signal,
@@ -86,13 +86,13 @@ export function useChat(options: UseChatOptions) {
       })
     }
     catch (err) {
-      if (abortController.signal.aborted) {
+      if (abortController?.signal.aborted) {
         return
       }
       status.value = 'error'
       const actualError = err instanceof Error ? err : new Error(String(err))
       error.value = actualError
-      abortController = null
+      abortController = undefined
     }
   }
 
@@ -198,7 +198,7 @@ export function useChat(options: UseChatOptions) {
     stop()
     messages.value = initialUIMessages
     input.value = ''
-    error.value = null
+    error.value = undefined
     status.value = 'idle'
   }
 
