@@ -1,5 +1,6 @@
-// mixed from
+// This function is inspired by the implementation in the Vercel AI library:
 // https://github.com/vercel/ai/blob/26e70676e17e84a3e6d3054722365325a14cdc00/packages/vue/src/use-chat.ts#L464-L476
+// and the discussion in the Vue.js core issue:
 // https://github.com/vuejs/core/issues/5303#issuecomment-1543596383
 import {
   isProxy,
