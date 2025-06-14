@@ -147,11 +147,11 @@ watch(status, (newStatus) => {
 
       <div class="messages-container">
         <MessageBubble
-          v-for="(message, idx) in messages"
-          :key="message?.id || idx"
+          v-for="(message, index) in messages"
+          :key="message?.id || index"
           :message="message"
-          :is-error="idx === messages.length - 1 && status === 'error'"
-          :error="idx === messages.length - 1 ? error : null"
+          :is-error="index === messages.length - 1 && status === 'error'"
+          :error="index === messages.length - 1 ? error : undefined"
           :reload="reload"
         />
       </div>
