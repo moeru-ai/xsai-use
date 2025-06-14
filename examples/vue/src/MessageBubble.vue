@@ -6,7 +6,7 @@ import MessageParts from './MessageParts.vue'
 interface Props {
   message: DeepReadonly<UIMessage>
   isError?: boolean
-  error?: Error | null
+  error?: Error
   reload?: (id: string) => void | Promise<void>
 }
 
