@@ -10,7 +10,7 @@ interface ToolMap {
   [key: string]: Awaited<ReturnType<typeof tool>>
 }
 
-const inputRef = ref<HTMLInputElement | null>(null)
+const inputRef = ref<HTMLInputElement>()
 const isLoadingTools = ref(true)
 const loadedTools = ref<ToolMap>({})
 
