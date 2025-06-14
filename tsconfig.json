@@ -4,7 +4,8 @@
     { "path": "./tsconfig.node.json" },
     { "path": "./tsconfig.react.json" },
     { "path": "./tsconfig.svelte.json" },
-    { "path": "./examples/svelte/tsconfig.json" }
+    { "path": "./examples/svelte/tsconfig.json" },
+    { "path": "./tsconfig.vue.json" }
   ],
   "files": []
 }

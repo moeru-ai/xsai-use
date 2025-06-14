@@ -1,0 +1,19 @@
+{
+  "name": "@xsai-use/examples-vue",
+  "type": "module",
+  "version": "0.0.1",
+  "private": true,
+  "description": "when UI libs meet xsai",
+  "author": "Moeru AI",
+  "license": "MIT",
+  "sideEffects": false,
+  "scripts": {
+    "preview": "vite --force"
+  },
+  "dependencies": {
+    "@xsai-use/vue": "workspace:",
+    "@xsai/tool": "catalog:xsai",
+    "valibot": "catalog:valibot",
+    "vue": "^3.5.13"
+  }
+}
