@@ -44,7 +44,7 @@ export function useChat(options: UseChatOptions) {
 
   const request = async ({ messages: requestMessages }: { messages: UIMessage[] }) => {
     status.value = 'loading'
-    error.value = null
+    error.value = undefined
 
     abortController = new AbortController()
 
