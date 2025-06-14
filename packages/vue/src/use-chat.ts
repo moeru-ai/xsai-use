@@ -1,7 +1,7 @@
 import type { InputMessage, UIMessage, UseChatOptions, UseChatStatus } from '@xsai-use/shared'
-import type { MaybeRefOrGetter, Ref } from 'vue'
 import { callApi, extractUIMessageParts, generateWeakID } from '@xsai-use/shared'
-import { computed, ref, toValue, watch } from 'vue'
+import { computed, readonly, ref, watch } from 'vue'
+import { deepToRaw } from './utils/deep-to-raw'
 
 declare global {
   interface ReadableStream<R = any> {
@@ -10,31 +10,33 @@ declare global {
   }
 }
 
-export function useChat(options: MaybeRefOrGetter<UseChatOptions>) {
-  const getOptions = () => toValue(options)
+export function useChat(options: UseChatOptions) {
+  const {
+    id,
+    generateID = generateWeakID,
+    initialMessages = [],
+    onFinish,
+    preventDefault = false,
+    ...streamTextOptions
+  } = options
 
-  const initialUIMessages = computed(() => {
-    const opts = getOptions()
-    const messages = opts.initialMessages ?? []
-    const idGenerator = opts.generateID ?? generateWeakID
-
-    return messages.map((m) => {
-      return {
-        ...m,
-        id: idGenerator(),
-        parts: extractUIMessageParts(m),
-      }
-    })
+  const initialUIMessages = initialMessages.map((m) => {
+    return {
+      ...m,
+      id: generateID(),
+      parts: extractUIMessageParts(m),
+    }
   })
 
-  const messages = ref<UIMessage[]>(initialUIMessages.value)
+  const messages = ref<UIMessage[]>(initialUIMessages)
   const status = ref<UseChatStatus>('idle')
   const input = ref('')
   const error = ref<Error | null>(null)
 
   let abortController: AbortController | null = null
 
-  watch(initialUIMessages, (newInitialMessages) => {
+  const initialUIMessagesR = computed(() => initialUIMessages)
+  watch(initialUIMessagesR, (newInitialMessages) => {
     if (status.value === 'idle') {
       messages.value = newInitialMessages
     }
@@ -47,31 +49,19 @@ export function useChat(options: MaybeRefOrGetter<UseChatOptions>) {
     abortController = new AbortController()
 
     try {
-      const opts = getOptions()
-      const {
-        id: _id,
-        generateID: _generateID,
-        initialMessages: _initialMessages,
-        onFinish: _onFinish,
-        preventDefault: _preventDefault,
-        ...currentStreamTextOptions
-      } = opts
-      const idGenerator = opts.generateID ?? generateWeakID
-
       await callApi({
-        ...currentStreamTextOptions,
+        ...streamTextOptions,
         messages: requestMessages,
         onFinish: () => {
           status.value = 'idle'
           abortController = null
-          // Call the onFinish callback if provided
-          void opts.onFinish?.()
+          void options.onFinish?.()
         },
         signal: abortController.signal,
       }, {
-        generateID: idGenerator,
+        generateID,
         updatingMessage: {
-          id: idGenerator(),
+          id: generateID(),
           parts: [],
           role: 'assistant',
         },
@@ -119,12 +109,9 @@ export function useChat(options: MaybeRefOrGetter<UseChatOptions>) {
       return
     }
 
-    const opts = getOptions()
-    const idGenerator = opts.generateID ?? generateWeakID
-
     const userMessage = {
       ...message,
-      id: idGenerator(),
+      id: generateID(),
       role: 'user',
     } as UIMessage
     userMessage.parts = extractUIMessageParts(userMessage)
@@ -133,15 +120,12 @@ export function useChat(options: MaybeRefOrGetter<UseChatOptions>) {
     messages.value = newMessages
 
     await request({
-      messages: newMessages,
+      messages: deepToRaw(newMessages),
     })
   }
 
   const handleSubmit = async (e?: Event) => {
-    const opts = getOptions()
-    if (opts.preventDefault && e) {
-      e.preventDefault()
-    }
+    preventDefault && e?.preventDefault?.()
 
     if (!input.value.trim()) {
       return
@@ -206,13 +190,13 @@ export function useChat(options: MaybeRefOrGetter<UseChatOptions>) {
     messages.value = newMessages
 
     await request({
-      messages: newMessages,
+      messages: deepToRaw(newMessages),
     })
   }
 
   const reset = () => {
     stop()
-    messages.value = initialUIMessages.value
+    messages.value = initialUIMessages
     input.value = ''
     error.value = null
     status.value = 'idle'
@@ -232,10 +216,10 @@ export function useChat(options: MaybeRefOrGetter<UseChatOptions>) {
 
   return {
     // state
-    messages,
-    status,
+    messages: readonly(messages),
+    status: readonly(status),
     input,
-    error,
+    error: readonly(error),
 
     // Actions
     submitMessage,
