@@ -12,7 +12,6 @@ interface Props {
 
 const props = withDefaults(defineProps<Props>(), {
   isError: false,
-  error: null,
 })
 </script>
 
