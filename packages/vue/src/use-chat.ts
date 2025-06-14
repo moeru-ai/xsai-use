@@ -31,7 +31,7 @@ export function useChat(options: UseChatOptions) {
   const messages = ref<UIMessage[]>(initialUIMessages)
   const status = ref<UseChatStatus>('idle')
   const input = ref('')
-  const error = ref<Error | null>(null)
+  const error = ref<Error>()
 
   let abortController: AbortController | null = null
 
