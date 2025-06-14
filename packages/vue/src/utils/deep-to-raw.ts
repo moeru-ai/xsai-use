@@ -1,3 +1,6 @@
+// mixed from
+// https://github.com/vercel/ai/blob/26e70676e17e84a3e6d3054722365325a14cdc00/packages/vue/src/use-chat.ts#L464-L476
+// https://github.com/vuejs/core/issues/5303#issuecomment-1543596383
 import {
   isProxy,
   isReactive,
@@ -10,18 +13,15 @@ export function deepToRaw<T>(input: T): T {
     return input.map(deepToRaw) as T
   }
 
-  if (isRef(input)
-    || isReactive(input)
-    || isProxy(input)) {
+  if (isRef(input) || isReactive(input) || isProxy(input)) {
     return deepToRaw(toRaw(input))
   }
 
   if (input != null && typeof input === 'object') {
-    const clone = {}
-    for (const [key, value] of Object.entries(input)) {
-      (clone as Record<string, unknown>)[key] = deepToRaw(value)
-    }
-    return clone as T
+    return Object.keys(input).reduce((acc, key) => {
+      (acc as Record<string, unknown>)[key] = deepToRaw(input[key as keyof T])
+      return acc
+    }, {} as T)
   }
   return input
 }
