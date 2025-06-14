@@ -27,7 +27,7 @@ const isLoading = computed(() => props.part.status === 'loading' || props.part.s
           <div v-if="Array.isArray(props.part.result)">
             <div v-for="(item, index) in props.part.result" :key="index">
               <div v-if="item.type === 'text'">
-                {{ String(item) }}
+                {{ item.text }}
               </div>
               <img v-if="item.type === 'image_url'" :src="String(item.image_url)" alt="Tool Result" style="max-width: 100%; border-radius: 4px;">
               <audio v-if="item.type === 'input_audio'" controls>

@@ -7,7 +7,7 @@ import {
 
 export function deepToRaw<T>(input: T): T {
   if (Array.isArray(input)) {
-    return [...input.map(deepToRaw) as unknown[]] as T
+    return input.map(deepToRaw) as T
   }
 
   if (isRef(input)
