@@ -16,7 +16,7 @@ export function deepToRaw<T>(input: T): T {
     return deepToRaw(toRaw(input))
   }
 
-  if (input !== null && typeof input === 'object') {
+  if (input != null && typeof input === 'object') {
     const clone = {}
     for (const [key, value] of Object.entries(input)) {
       (clone as Record<string, unknown>)[key] = deepToRaw(value)
