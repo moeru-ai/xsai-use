@@ -146,7 +146,7 @@ export function useChat(options: UseChatOptions) {
   const stop = () => {
     if (abortController) {
       abortController.abort()
-      abortController = null
+      abortController = undefined
       status.value = 'idle'
     }
   }
