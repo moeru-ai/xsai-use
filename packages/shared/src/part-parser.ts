@@ -3,7 +3,7 @@ import type { UIMessagePart } from './types/ui'
 
 export type ParseFunc<T extends Part['type']> = (part: Extract<Part, { type: T }>) => UIMessagePart[]
 
-type ParseMap = {
+export type ParseMap = {
   [T in Part['type']]?: ParseFunc<T>
 }
 
@@ -31,6 +31,7 @@ export class PartParser {
 
   register(map: ParseMap) {
     this.#parses = { ...this.#parses, ...map }
+    return this
   }
 
   #parsePart(part: Part): UIMessagePart[] {
