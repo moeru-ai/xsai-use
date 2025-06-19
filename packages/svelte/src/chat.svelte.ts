@@ -6,8 +6,8 @@ import type {
 } from '@xsai-use/shared'
 import {
   callApi,
-  extractUIMessageParts,
   generateWeakID,
+  PartParser,
 } from '@xsai-use/shared'
 import { untrack } from 'svelte'
 
@@ -17,10 +17,13 @@ export class Chat {
   readonly id: string = $derived(this.#options.id ?? this.#generateID())
   readonly #onFinish = $derived(this.#options.onFinish)
   readonly #preventDefault = $derived(this.#options.preventDefault ?? false)
+
+  readonly #partParser = new PartParser()
+
   readonly #initialUIMessages = $derived((this.#options.initialMessages ?? []).map(m => ({
     ...m,
     id: this.#generateID(),
-    parts: extractUIMessageParts(m),
+    parts: this.#partParser.exec(m),
   })))
 
   readonly #streamTextOptions: Record<string, unknown>
@@ -138,7 +141,7 @@ export class Chat {
       role: 'user',
       id: this.#generateID(),
     } as UIMessage
-    userMessage.parts = extractUIMessageParts(userMessage)
+    userMessage.parts = this.#partParser.exec(userMessage)
 
     this.messages = this.messages.concat(userMessage)
 

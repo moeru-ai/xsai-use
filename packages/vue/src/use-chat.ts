@@ -1,5 +1,5 @@
 import type { InputMessage, UIMessage, UseChatOptions, UseChatStatus } from '@xsai-use/shared'
-import { callApi, extractUIMessageParts, generateWeakID } from '@xsai-use/shared'
+import { callApi, generateWeakID, PartParser } from '@xsai-use/shared'
 import { computed, readonly, ref, watch } from 'vue'
 import { deepToRaw } from './utils/deep-to-raw'
 
@@ -20,11 +20,13 @@ export function useChat(options: UseChatOptions) {
     ...streamTextOptions
   } = options
 
+  const partParser = new PartParser()
+
   const initialUIMessages = initialMessages.map((m) => {
     return {
       ...m,
       id: generateID(),
-      parts: extractUIMessageParts(m),
+      parts: partParser.exec(m),
     }
   })
 
@@ -114,7 +116,7 @@ export function useChat(options: UseChatOptions) {
       id: generateID(),
       role: 'user',
     } as UIMessage
-    userMessage.parts = extractUIMessageParts(userMessage)
+    userMessage.parts = partParser.exec(userMessage)
 
     const newMessages = [...messages.value, userMessage]
     messages.value = newMessages
