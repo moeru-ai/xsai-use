@@ -47,8 +47,10 @@ export interface UIMessageToolCallPart {
    * - `partial` - the tool call has partially loaded
    *
    * partial -> loading -> complete
-   *         -> loading -> error
-   *         -> error
+   *
+   * partial -> loading -> error
+   *
+   * partial -> error
    */
   status: 'complete' | 'error' | 'loading' | 'partial'
   toolCall: ToolCall

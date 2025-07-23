@@ -18,77 +18,78 @@ export async function callApi(streamTextOptions: Omit<StreamTextOptions, 'onEven
     role: 'assistant',
   }
 
-  const { chunkStream } = await streamText({
+  let shouldNewTextNext = true
+
+  const { fullStream } = await streamText({
     ...streamTextOptions as StreamTextOptions,
     onEvent: (event) => {
       const parts = message.parts
 
       switch (event.type) {
-        case 'reasoning': {
-          const part = parts.find(part => part.type === 'reasoning')
-          if (part) {
-            part.reasoning += event.reasoning
-          }
-          else {
-            parts.push({ reasoning: event.reasoning, type: 'reasoning' })
-          }
-          // TODO: add reasoning to the message for next time submit
-          // message.reasoning += event.reasoning
-          break
-        }
         case 'text-delta': {
-          const part = parts.find(part => part.type === 'text')
-          if (part) {
+          const part = parts.findLast(part => part.type === 'text')
+          if (part && !shouldNewTextNext) {
             part.text += event.text
           }
           else {
             parts.push({ text: event.text, type: 'text' })
           }
+
           message.content = (message.content as string ?? '') + event.text
+
+          shouldNewTextNext = false
           break
         }
-        case 'tool-call': {
-          const part = parts.find((part): part is UIMessageToolCallPart => part.type === 'tool-call' && part.status === 'partial' && part.toolCall.index === event.toolCall.index)
-          if (part) {
-            part.status = 'loading'
-          }
+        case 'tool-call-streaming-start': {
+          shouldNewTextNext = true
+          parts.push({
+            status: 'partial',
+            toolCall: {
+              index: parts.length,
+              id: event.toolCallId,
+              type: 'function',
+              function: {
+                name: event.toolName,
+                arguments: '',
+              },
+            },
+            type: 'tool-call',
+          })
           break
         }
         case 'tool-call-delta': {
-          const part = parts.find((part): part is UIMessageToolCallPart => part.type === 'tool-call' && part.status === 'partial' && part.toolCall.index === event.toolCall.index)
+          const part = parts.find((part): part is UIMessageToolCallPart => part.type === 'tool-call' && part.toolCall.id === event.toolCallId)
           if (part) {
-            part.toolCall.function.arguments += event.toolCall.function.arguments
-          }
-          else {
-            parts.push({
-              status: 'partial',
-              toolCall: {
-                ...event.toolCall,
-              },
-              type: 'tool-call',
-            })
+            part.status = 'loading'
+            part.toolCall.function.arguments += event.argsTextDelta
           }
           break
         }
-        case 'tool-call-result': {
-          const part = parts.find((part): part is UIMessageToolCallPart => part.type === 'tool-call' && part.status === 'loading' && part.toolCall.id === event.id)
+        case 'tool-call': {
+          const part = parts.find((part): part is UIMessageToolCallPart => part.type === 'tool-call' && part.toolCall.id === event.toolCallId)
           if (part) {
-            if (event.error !== undefined) {
-              part.status = 'error'
-              part.error = event.error
-              break
-            }
+            part.status = 'complete'
+            part.toolCall.function.arguments = event.args
+          }
+          break
+        }
+        case 'tool-result': {
+          const part = parts.find((part): part is UIMessageToolCallPart => part.type === 'tool-call' && part.toolCall.id === event.toolCallId)
+          if (part) {
             if (event.result !== undefined) {
-              part.status = 'complete'
               part.result = event.result
-              break
             }
           }
           break
         }
         case 'error':
-        case 'finish':
-        case 'refusal':
+        case 'finish': {
+          const part = parts.find((part): part is UIMessageToolCallPart => part.type === 'tool-call' && part.status !== 'complete')
+          if (part) {
+            part.status = 'error'
+          }
+          break
+        }
         default:
       }
 
@@ -96,5 +97,5 @@ export async function callApi(streamTextOptions: Omit<StreamTextOptions, 'onEven
     },
   })
 
-  await chunkStream.pipeTo(new WritableStream({ write() { } }))
+  await fullStream.pipeTo(new WritableStream({ write() { } }))
 }

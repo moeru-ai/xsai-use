@@ -96,7 +96,7 @@ onMounted(async () => {
         },
       ],
       baseURL: 'http://localhost:11434/v1/',
-      model: 'mistral-nemo-instruct-2407',
+      model: 'qwen3:0.6b',
       maxSteps: 3,
       toolChoice: 'auto',
       tools: Object.values(loadedTools.value),
