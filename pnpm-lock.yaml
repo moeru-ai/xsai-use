@@ -22,14 +22,17 @@ catalogs:
       version: 7.0.5
   xsai:
     '@xsai/shared-chat':
-      specifier: ^0.3.2
-      version: 0.3.2
+      specifier: ^0.3.3
+      version: 0.3.3
     '@xsai/stream-text':
-      specifier: ^0.3.2
-      version: 0.3.2
+      specifier: ^0.3.3
+      version: 0.3.3
     '@xsai/tool':
-      specifier: ^0.3.2
-      version: 0.3.2
+      specifier: ^0.3.3
+      version: 0.3.3
+    '@xsai/utils-reasoning':
+      specifier: ^0.3.3
+      version: 0.3.3
 
 importers:
 
@@ -118,7 +121,7 @@ importers:
         version: link:../../packages/react
       '@xsai/tool':
         specifier: catalog:xsai
-        version: 0.3.2(@valibot/to-json-schema@1.3.0(valibot@1.1.0(typescript@5.8.3)))(zod@3.25.67)
+        version: 0.3.3(@valibot/to-json-schema@1.3.0(valibot@1.1.0(typescript@5.8.3)))(zod@3.25.67)
       classnames:
         specifier: ^2.5.1
         version: 2.5.1
@@ -149,7 +152,7 @@ importers:
         version: link:../../packages/svelte
       '@xsai/tool':
         specifier: catalog:xsai
-        version: 0.3.2(@valibot/to-json-schema@1.3.0(valibot@1.1.0(typescript@5.8.3)))(zod@3.25.67)
+        version: 0.3.3(@valibot/to-json-schema@1.3.0(valibot@1.1.0(typescript@5.8.3)))(zod@3.25.67)
       svelte:
         specifier: ^5.33.19
         version: 5.34.6
@@ -164,7 +167,7 @@ importers:
         version: link:../../packages/vue
       '@xsai/tool':
         specifier: catalog:xsai
-        version: 0.3.2(@valibot/to-json-schema@1.3.0(valibot@1.1.0(typescript@5.8.3)))(zod@3.25.67)
+        version: 0.3.3(@valibot/to-json-schema@1.3.0(valibot@1.1.0(typescript@5.8.3)))(zod@3.25.67)
       valibot:
         specifier: catalog:valibot
         version: 1.1.0(typescript@5.8.3)
@@ -193,7 +196,7 @@ importers:
         version: 1.3.0(valibot@1.1.0(typescript@5.8.3))
       '@xsai/tool':
         specifier: catalog:xsai
-        version: 0.3.2(@valibot/to-json-schema@1.3.0(valibot@1.1.0(typescript@5.8.3)))(zod@3.25.67)
+        version: 0.3.3(@valibot/to-json-schema@1.3.0(valibot@1.1.0(typescript@5.8.3)))(zod@3.25.67)
       react:
         specifier: ^19.1.0
         version: 19.1.0
@@ -208,12 +211,12 @@ importers:
     dependencies:
       '@xsai/shared-chat':
         specifier: catalog:xsai
-        version: 0.3.2
+        version: 0.3.3
       '@xsai/stream-text':
         specifier: catalog:xsai
-        version: 0.3.2
+        version: 0.3.3
       '@xsai/utils-reasoning':
-        specifier: ^0.3.3
+        specifier: catalog:xsai
         version: 0.3.3
 
   packages/svelte:
@@ -1292,17 +1295,17 @@ packages:
       vue:
         optional: true
 
-  '@xsai/shared-chat@0.3.2':
-    resolution: {integrity: sha512-UjisxLjExiyCB+aRI7nfm3gy1cB0BAJ63Ju7K6lqUtVkQPGU/rNZN6K0bI9lytYpS3h+am1lxOQpUrmuebS71Q==}
+  '@xsai/shared-chat@0.3.3':
+    resolution: {integrity: sha512-zCfAlXhNfQ3+ErhP8BnSIdsELAENHubfscLdImls+9zNHfY1AzIaBuRIf5dWJYmC4/NsOop1QHYjfM+7Wg4gjw==}
 
-  '@xsai/shared@0.3.2':
-    resolution: {integrity: sha512-StLLjMwfDDyneIInJCaYYEYbzi9ipAEKp6/cSErQ3r7OmCvn9G7urLgxyT+ofopE+aGGBck22ryPYOaSWRyENQ==}
+  '@xsai/shared@0.3.3':
+    resolution: {integrity: sha512-1xul8h7He5cM+H/gGx8pdE/LLqujO3xSHM2+V4XVEjI05VxQq+s5lk42/7NUUbjcvcFxi5Ow9IL4pezHgxq9aQ==}
 
-  '@xsai/stream-text@0.3.2':
-    resolution: {integrity: sha512-nLZlqAz62T1Vq96QvtwLAVoCCtVisMlQ+INffxQLZqDA+4QaS7Nw9BDjI47Ko3m17EjpUXrKTF+F8gEqWUv4Ag==}
+  '@xsai/stream-text@0.3.3':
+    resolution: {integrity: sha512-Y/f4EkvWIF6nJ/07RJpneAugMV6pHiDi1c0X2pn6m6NhGodpj1HZKzvYTFryW/ZYc5NCG+B7AXUQyCy8PUSOeg==}
 
-  '@xsai/tool@0.3.2':
-    resolution: {integrity: sha512-RX3s7w6zPNqfNOSnHG85DiC/4H7fJKNcaYxh08S9JnYtVZF31e6BxdR8qOB6HvBpu0YiF37s7JqEgdb5x0cTmg==}
+  '@xsai/tool@0.3.3':
+    resolution: {integrity: sha512-mhF+sgIGlfz1scEXekpJEx+YimIQkunlE+7CPSd3rrTymdMCC5SG7hRg1HiGlq+8cSgmhqPHJuUPVS4Dsll9lA==}
 
   '@xsai/utils-reasoning@0.3.3':
     resolution: {integrity: sha512-4YiikRMij9ns9I2qEZeyHrG3SSfghfxMJU4DpvNdmZznDT3OujUMHrgD3BuvWXTyuGuyAyV8ZiZ0TR+DXl/Rkg==}
@@ -3194,8 +3197,8 @@ packages:
   xmlchars@2.2.0:
     resolution: {integrity: sha512-JZnDKK8B0RCDw84FNdDAIpZK+JuJw+s7Lz8nksI7SIuU3UXJJslUthsi+uWBUYOwPFwW7W7PRLRfUKpxjtjFCw==}
 
-  xsschema@0.3.2:
-    resolution: {integrity: sha512-HaQkdU1BffeWIy6mUJeWRpL9N5qiWj4X2BkTfKskgezAEqZNnciuclMD1AFYWXwNU9TowRrQd8uyDpvq+XgO9Q==}
+  xsschema@0.3.3:
+    resolution: {integrity: sha512-XtUzDlmCPbo+HE3yQYiForOXZJ4bczdOYLdJifav5mDCKBQmtWk2D6p0LSzYG2SL4SXJwbfgBvFQ0/TDr1yIUw==}
     peerDependencies:
       '@valibot/to-json-schema': ^1.0.0
       arktype: ^2.1.20
@@ -4368,21 +4371,21 @@ snapshots:
       typescript: 5.8.3
       vue: 3.5.17(typescript@5.8.3)
 
-  '@xsai/shared-chat@0.3.2':
+  '@xsai/shared-chat@0.3.3':
     dependencies:
-      '@xsai/shared': 0.3.2
+      '@xsai/shared': 0.3.3
 
-  '@xsai/shared@0.3.2': {}
+  '@xsai/shared@0.3.3': {}
 
-  '@xsai/stream-text@0.3.2':
+  '@xsai/stream-text@0.3.3':
     dependencies:
-      '@xsai/shared-chat': 0.3.2
+      '@xsai/shared-chat': 0.3.3
 
-  '@xsai/tool@0.3.2(@valibot/to-json-schema@1.3.0(valibot@1.1.0(typescript@5.8.3)))(zod@3.25.67)':
+  '@xsai/tool@0.3.3(@valibot/to-json-schema@1.3.0(valibot@1.1.0(typescript@5.8.3)))(zod@3.25.67)':
     dependencies:
-      '@xsai/shared': 0.3.2
-      '@xsai/shared-chat': 0.3.2
-      xsschema: 0.3.2(@valibot/to-json-schema@1.3.0(valibot@1.1.0(typescript@5.8.3)))(zod@3.25.67)
+      '@xsai/shared': 0.3.3
+      '@xsai/shared-chat': 0.3.3
+      xsschema: 0.3.3(@valibot/to-json-schema@1.3.0(valibot@1.1.0(typescript@5.8.3)))(zod@3.25.67)
     transitivePeerDependencies:
       - '@valibot/to-json-schema'
       - arktype
@@ -6525,7 +6528,7 @@ snapshots:
 
   xmlchars@2.2.0: {}
 
-  xsschema@0.3.2(@valibot/to-json-schema@1.3.0(valibot@1.1.0(typescript@5.8.3)))(zod@3.25.67):
+  xsschema@0.3.3(@valibot/to-json-schema@1.3.0(valibot@1.1.0(typescript@5.8.3)))(zod@3.25.67):
     optionalDependencies:
       '@valibot/to-json-schema': 1.3.0(valibot@1.1.0(typescript@5.8.3))
       zod: 3.25.67

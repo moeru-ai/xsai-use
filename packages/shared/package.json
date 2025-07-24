@@ -39,6 +39,6 @@
   "dependencies": {
     "@xsai/shared-chat": "catalog:xsai",
     "@xsai/stream-text": "catalog:xsai",
-    "@xsai/utils-reasoning": "^0.3.3"
+    "@xsai/utils-reasoning": "catalog:xsai"
   }
 }

@@ -12,6 +12,7 @@ catalogs:
   vite:
     vite: &vite ^7.0.5
   xsai:
-    '@xsai/stream-text': &xsai ^0.3.2
+    '@xsai/stream-text': &xsai ^0.3.3
     '@xsai/shared-chat': *xsai
     '@xsai/tool': *xsai
+    '@xsai/utils-reasoning': *xsai
