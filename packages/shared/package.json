@@ -38,7 +38,7 @@
   },
   "dependencies": {
     "@xsai/shared-chat": "catalog:xsai",
-    "@xsai/stream-text": "catalog:xsai"
-  },
-  "devDependencies": {}
+    "@xsai/stream-text": "catalog:xsai",
+    "@xsai/utils-reasoning": "catalog:xsai"
+  }
 }

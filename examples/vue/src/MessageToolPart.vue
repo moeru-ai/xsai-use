@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { UIMessageToolCallPart } from '@xsai-use/vue'
 import type { DeepReadonly } from 'vue'
-import { computed, defineProps } from 'vue'
+import { computed } from 'vue'
 
 const props = defineProps<{
   part: DeepReadonly<UIMessageToolCallPart>

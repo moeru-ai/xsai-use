@@ -43,7 +43,7 @@
     "svelte": "^5.0.0"
   },
   "dependencies": {
-    "@xsai-use/shared": "workspace:"
+    "@xsai-use/shared": "workspace:*"
   },
   "devDependencies": {
     "svelte": "^5.0.0"

@@ -1,5 +1,5 @@
 import type { InputMessage, UIMessage, UseChatOptions, UseChatStatus } from '@xsai-use/shared'
-import { callApi, extractUIMessageParts, generateWeakID } from '@xsai-use/shared'
+import { callApi, generateWeakID, PartParser } from '@xsai-use/shared'
 
 import { useCallback, useMemo, useRef, useState } from 'react'
 
@@ -22,12 +22,14 @@ export function useChat(options: UseChatOptions) {
     ...streamTextOptions
   } = options
 
+  const partParser = useRef(new PartParser())
+
   const stableInitialMessages = useStableValue(initialMessages ?? [])
   const initialUIMessages = useMemo(() => stableInitialMessages.map((m) => {
     return {
       ...m,
       id: generateID(),
-      parts: extractUIMessageParts(m),
+      parts: partParser.current.exec(m),
     }
   }), [stableInitialMessages, generateID])
 
@@ -143,7 +145,7 @@ export function useChat(options: UseChatOptions) {
         id: generateID(),
         role: 'user',
       } as UIMessage
-      userMessage.parts = extractUIMessageParts(userMessage)
+      userMessage.parts = partParser.current.exec(userMessage)
 
       const newMessages = [
         ...uiMessagesRef.current,
