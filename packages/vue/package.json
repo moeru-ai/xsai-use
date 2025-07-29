@@ -1,8 +1,7 @@
 {
   "name": "@xsai-use/vue",
   "type": "module",
-  "version": "0.0.1",
-  "private": true,
+  "version": "0.0.2",
   "description": "when UI libs meet xsai",
   "author": "Moeru AI",
   "license": "MIT",
@@ -35,7 +34,7 @@
     "types": "./dist/index.d.ts"
   },
   "scripts": {
-    "build": "echo not implemented yet",
+    "build": "pkgroll",
     "test": "vitest run",
     "coverage": "vitest run --coverage"
   },
