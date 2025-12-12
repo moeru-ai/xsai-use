@@ -7,10 +7,10 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/fr33z00/xsai-use.git",
+    "url": "git+https://github.com/moeru-ai/xsai-use.git",
     "directory": "packages/shared"
   },
-  "bugs": "https://github.com/fr33z00/xsai-use/issues",
+  "bugs": "https://github.com/moeru-ai/xsai-use/issues",
   "keywords": [
     "xsai",
     "openai",
