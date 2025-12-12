@@ -79,7 +79,7 @@ export function useChat(options: UseChatOptions) {
             // eslint-disable-next-line ts/no-floating-promises
             onFinish?.()
           },
-          signal: abortControllerRef.current.signal,
+          abortSignal: abortControllerRef.current.signal,
         }, {
           generateID,
           updatingMessage: {
