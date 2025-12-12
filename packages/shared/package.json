@@ -1,16 +1,16 @@
 {
   "name": "@xsai-use/shared",
   "type": "module",
-  "version": "0.0.2",
+  "version": "0.0.2-reasoning",
   "description": "when UI libs meet xsai",
   "author": "Moeru AI",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/moeru-ai/xsai-use.git",
+    "url": "git+https://github.com/fr33z00/xsai-use.git",
     "directory": "packages/shared"
   },
-  "bugs": "https://github.com/moeru-ai/xsai-use/issues",
+  "bugs": "https://github.com/fr33z00/xsai-use/issues",
   "keywords": [
     "xsai",
     "openai",

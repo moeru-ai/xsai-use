@@ -1,4 +1,4 @@
-import type { AudioBase64, ImageURLorBase64, Message, ToolCall, ToolMessagePart } from '@xsai/shared-chat'
+import type { AudioContentPart, CommonContentPart, ImageContentPart, Message, ToolCall } from '@xsai/shared-chat'
 
 export type UIMessage = Message & {
   id: string
@@ -6,13 +6,13 @@ export type UIMessage = Message & {
 }
 
 export interface UIMessageAudioPart {
-  audio: AudioBase64
+  audio: AudioContentPart
   type: 'audio'
 }
 
 export interface UIMessageImagePart {
   type: 'image'
-  url: ImageURLorBase64
+  url: ImageContentPart
 }
 
 export type UIMessagePart
@@ -55,6 +55,6 @@ export interface UIMessageToolCallPart {
   status: 'complete' | 'error' | 'loading' | 'partial'
   toolCall: ToolCall
   type: 'tool-call'
-  result?: string | ToolMessagePart[]
+  result?: string | CommonContentPart[]
   error?: unknown
 }
