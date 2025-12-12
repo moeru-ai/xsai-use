@@ -19,6 +19,7 @@ export async function callApi(streamTextOptions: Omit<StreamTextOptions, 'onEven
   }
 
   let shouldNewTextNext = true
+  let shouldNewReasoningNext = true;
 
   const { fullStream } = await streamText({
     ...streamTextOptions as StreamTextOptions,
@@ -27,6 +28,7 @@ export async function callApi(streamTextOptions: Omit<StreamTextOptions, 'onEven
 
       switch (event.type) {
         case 'text-delta': {
+          shouldNewReasoningNext = true;
           const part = parts.findLast(part => part.type === 'text')
           if (part && !shouldNewTextNext) {
             part.text += event.text
@@ -40,8 +42,23 @@ export async function callApi(streamTextOptions: Omit<StreamTextOptions, 'onEven
           shouldNewTextNext = false
           break
         }
+        case "reasoning-delta": {
+          shouldNewTextNext = true
+          const part = parts.findLast((part) => part.type === "reasoning")
+          if (part && !shouldNewReasoningNext) {
+            part.reasoning += event.text
+          } else {
+            parts.push({ reasoning: event.text, type: "reasoning" })
+          }
+
+          message.content = (message.content ?? "") + event.text
+
+          shouldNewReasoningNext = false
+          break
+        }
         case 'tool-call-streaming-start': {
           shouldNewTextNext = true
+          shouldNewReasoningNext = true;
           parts.push({
             status: 'partial',
             toolCall: {
