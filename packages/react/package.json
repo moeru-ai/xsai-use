@@ -1,7 +1,7 @@
 {
   "name": "@xsai-use/react",
   "type": "module",
-  "version": "0.0.2",
+  "version": "0.0.2-reasoning",
   "description": "when UI libs meet xsai",
   "author": "Moeru AI",
   "license": "MIT",
@@ -45,7 +45,7 @@
     "react-dom": "^19.0.0"
   },
   "dependencies": {
-    "@xsai-use/shared": "workspace:*"
+    "@xsai-use/shared": "file:///workspace/xsai-use/packages/shared"
   },
   "devDependencies": {
     "@types/react": "^19.1.3",

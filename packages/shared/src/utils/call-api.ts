@@ -21,7 +21,7 @@ export async function callApi(streamTextOptions: Omit<StreamTextOptions, 'onEven
   let shouldNewTextNext = true
   let shouldNewReasoningNext = true
 
-  const { fullStream } = await streamText({
+  const { fullStream } = streamText({
     ...streamTextOptions as StreamTextOptions,
     onEvent: (event) => {
       const parts = message.parts
@@ -52,7 +52,7 @@ export async function callApi(streamTextOptions: Omit<StreamTextOptions, 'onEven
             parts.push({ reasoning: event.text, type: 'reasoning' })
           }
 
-          message.content = (message.content ?? '') + event.text
+          message.content = (message.content as string ?? '') + event.text
 
           shouldNewReasoningNext = false
           break
