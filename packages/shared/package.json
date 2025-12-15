@@ -1,7 +1,7 @@
 {
   "name": "@xsai-use/shared",
   "type": "module",
-  "version": "0.0.2-reasoning",
+  "version": "0.0.2",
   "description": "when UI libs meet xsai",
   "author": "Moeru AI",
   "license": "MIT",
