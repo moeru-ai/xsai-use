@@ -55,6 +55,7 @@ export async function callApi(streamTextOptions: Omit<StreamTextOptions, 'onEven
             },
             type: 'tool-call',
           })
+          message.content = message.content as string ?? ''
           break
         }
         case 'tool-call-delta': {
