@@ -1,4 +1,4 @@
-import type { Message, CommonContentPart, RefusalContentPart } from '@xsai/shared-chat'
+import type { CommonContentPart, Message, RefusalContentPart } from '@xsai/shared-chat'
 import type { UIMessagePart } from './types/ui'
 
 export type ParseFunc<T extends (CommonContentPart | RefusalContentPart)['type']> = (part: Extract<CommonContentPart | RefusalContentPart, { type: T }>) => UIMessagePart[]
