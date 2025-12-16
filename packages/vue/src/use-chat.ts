@@ -59,7 +59,7 @@ export function useChat(options: UseChatOptions) {
           abortController = undefined
           void options.onFinish?.()
         },
-        signal: abortController.signal,
+        abortSignal: abortController.signal,
       }, {
         generateID,
         updatingMessage: {
