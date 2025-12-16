@@ -82,7 +82,7 @@ export class Chat {
 
       await callApi(
         {
-          ...this.#streamTextOptions,
+          ...(this.#streamTextOptions as UseChatOptions),
           messages,
           onFinish: () => {
             this.#status = 'idle'
