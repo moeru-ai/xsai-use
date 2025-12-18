@@ -1,10 +1,10 @@
-import type { Message, Part } from '@xsai/shared-chat'
+import type { CommonContentPart, Message, RefusalContentPart } from '@xsai/shared-chat'
 import type { UIMessagePart } from './types/ui'
 
-export type ParseFunc<T extends Part['type']> = (part: Extract<Part, { type: T }>) => UIMessagePart[]
+export type ParseFunc<T extends (CommonContentPart | RefusalContentPart)['type']> = (part: Extract<CommonContentPart | RefusalContentPart, { type: T }>) => UIMessagePart[]
 
 export type ParseMap = {
-  [T in Part['type']]?: ParseFunc<T>
+  [T in (CommonContentPart | RefusalContentPart)['type']]?: ParseFunc<T>
 }
 
 const defaultParseMap: ParseMap = {
@@ -34,7 +34,7 @@ export class PartParser {
     return this
   }
 
-  #parsePart(part: Part): UIMessagePart[] {
+  #parsePart(part: CommonContentPart | RefusalContentPart): UIMessagePart[] {
     const parse = this.#parses[part.type]
     if (parse) {
       return (parse as ParseFunc<typeof part.type>)(part)

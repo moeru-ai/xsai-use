@@ -12,7 +12,7 @@ import {
 import { untrack } from 'svelte'
 
 export class Chat {
-  readonly #options: UseChatOptions = {}
+  readonly #options: UseChatOptions = {} as UseChatOptions
   readonly #generateID = $derived(this.#options.generateID ?? generateWeakID)
   readonly id: string = $derived(this.#options.id ?? this.#generateID())
   readonly #onFinish = $derived(this.#options.onFinish)
@@ -82,7 +82,7 @@ export class Chat {
 
       await callApi(
         {
-          ...this.#streamTextOptions,
+          ...(this.#streamTextOptions as UseChatOptions),
           messages,
           onFinish: () => {
             this.#status = 'idle'
@@ -91,7 +91,7 @@ export class Chat {
             this.#onFinish?.()
             this.#abortController = undefined
           },
-          signal: this.#abortController.signal,
+          abortSignal: this.#abortController.signal,
         },
         {
           generateID: this.#generateID,
