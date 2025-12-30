@@ -1,7 +1,7 @@
 {
   "name": "@xsai-use/svelte",
   "type": "module",
-  "version": "0.0.2",
+  "version": "0.0.3-beta.1",
   "description": "when UI libs meet xsai",
   "author": "Moeru AI",
   "license": "MIT",
